@@ -3,7 +3,7 @@ using ListSmarter.Models;
 
 namespace ListSmarter.Services
 {
-    public interface IService
+    public interface IPersonService
     {
         IList<TaskDto> GetAllTasks();
         TaskDto GetTaskById(int taskId);

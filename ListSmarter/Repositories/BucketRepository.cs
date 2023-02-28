@@ -1,65 +1,104 @@
-using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using AutoMapper;
+using ListSmarter.Models;
 using ListSmarter.Repositories.Models;
+using static ListSmarter.Models.BucketDto;
 
 namespace ListSmarter.Repositories
 {
     public class BucketRepository : IBucketRepository
     {
+        private readonly IMapper _mapper;
+        private readonly List<Bucket> _buckets = new List<Bucket>();
+        private IBucketRepository _bucketRepositoryImplementation;
 
-        private readonly List<Bucket> _buckets;
-
-        public BucketRepository()
+        public BucketRepository(IMapper mapper)
         {
-            _buckets = new List<Bucket>();
+            _mapper = mapper;
         }
 
-        public IEnumerable<Bucket> GetAll()
+        public IEnumerable<BucketDto> GetAll()
+        {
+            return _mapper.Map<IEnumerable<BucketDto>>(_buckets);
+        }
+
+        IEnumerable<Bucket> IBucketRepository.GetAll()
         {
             return _buckets;
         }
 
-        public Bucket GetById(int id)
+        public BucketDto GetById(int id)
         {
-            return _buckets.FirstOrDefault(x => x.Id == id);
+            var bucket = _buckets.FirstOrDefault(b => b.Id == id);
+            return _mapper.Map<BucketDto>(bucket);
         }
 
         public void Create(Bucket bucket)
         {
-            if (_buckets.Any(x => x.Title == bucket.Title))
-            {
-                throw new System.Exception("Bucket with this title already exists");
-            }
             _buckets.Add(bucket);
         }
-
-        public void Update(Bucket bucket)
+        
+        public void Delete(BucketDto bucket)
         {
-            var existingBucket = GetById(bucket.Id);
-            
-            if (existingBucket == null)
+            var bucketToRemove = _buckets.FirstOrDefault(b => b.Id == bucket.Id);
+            if (bucketToRemove != null)
             {
-                throw new System.Exception("Bucket does not exist");
+                _buckets.Remove(bucketToRemove);
             }
-            
-            if (_buckets.Any(x => x.Title == bucket.Title && x.Id != bucket.Id))
-            {
-                throw new System.Exception("Bucket with this title already exists");
-            }
-            
-            existingBucket.Title = bucket.Title;
-            
         }
 
-        public void Delete(Bucket bucket)
+        public void IsNameUnique(Bucket bucket)
         {
-            if (bucket.Tasks.Any())
+            var bucketWithSameName = _buckets.FirstOrDefault(b => b.Title == bucket.Title);
+            if (bucketWithSameName != null)
             {
-                throw new ArgumentException("Bucket can not be removed if there are tasks assigned to it");
+                throw new DuplicateNameException($"Bucket with name {bucket.Title} already exists");
             }
+        }
 
-            _buckets.Remove(bucket);
+        public int GetNextId()
+        {
+            var previousId = _buckets.Any() ? _buckets.Max(b => b.Id) : 0;
+            return previousId + 1;
+        }
+
+        public BucketDto Create(BucketDto bucketDto)
+        {
+            var bucket = _mapper.Map<Bucket>(bucketDto);
+            bucket.Id = _buckets.Any() ? _buckets.Max(b => b.Id) + 1 : 1;
+            _buckets.Add(bucket);
+            return _mapper.Map<BucketDto>(bucket);
+        }
+
+        public void Update(BucketDto bucketDto)
+        {
+            var bucketToUpdate = _buckets.FirstOrDefault(b => b.Id == bucketDto.Id);
+            if (bucketToUpdate != null)
+            {
+                _mapper.Map(bucketDto, bucketToUpdate);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            var bucketToRemove = _buckets.FirstOrDefault(b => b.Id == id);
+            if (bucketToRemove != null)
+            {
+                _buckets.Remove(bucketToRemove);
+            }
+        }
+
+        public bool IsEmpty(int id)
+        {
+            var bucket = _buckets.FirstOrDefault(b => b.Id == id);
+            return bucket != null && !bucket.Tasks.Any();
+        }
+
+        public bool IsNameUnique(string title)
+        {
+            return !_buckets.Any(b => b.Title == title);
         }
     }
 }

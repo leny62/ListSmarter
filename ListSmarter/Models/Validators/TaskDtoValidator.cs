@@ -1,38 +1,19 @@
+using FluentValidation;
+using ListSmarter.Models;
+
 namespace ListSmarter.Models.Validators
 {
-    public class TaskDtoValidator
+    public class TaskDtoValidator : AbstractValidator<TaskDto>
+
     {
-        public static bool Validate(TaskDto task)
-        {
-            if (task == null)
-            {
-                return false;
-            }
-            if (task.Id < 0)
-            {
-                return false;
-            }
-            if (string.IsNullOrEmpty(task.Title))
-            {
-                return false;
-            }
-            if (string.IsNullOrEmpty(task.Description))
-            {
-                return false;
-            }
-            if (task.Status == null)
-            {
-                return false;
-            }
-            if (task.Assignee == null)
-            {
-                return false;
-            }
-            if (task.Bucket == null)
-            {
-                return false;
-            }
-            return true;
-        }
+    public TaskDtoValidator()
+    {
+        RuleFor(task => task.Id).GreaterThan(0);
+        RuleFor(task => task.Title).NotEmpty();
+        RuleFor(task => task.Description).NotEmpty();
+        RuleFor(task => task.Status).NotNull();
+        RuleFor(task => task.Assignee).NotNull();
+        RuleFor(task => task.Bucket).NotNull();
+    }
     }
 }

@@ -1,71 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{4E33A8EF-333A-4323-A2A7-9E3FB7E83294}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>ListSmarter</RootNamespace>
-        <AssemblyName>ListSmarter</AssemblyName>
-        <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
+
     <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+      <PackageReference Include="FluentValidation" Version="11.5.1" />
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+      <PackageReference Include="FluentValidation.WebAPI" Version="8.6.1" />
     </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Class1.cs" />
-        <Compile Include="Enums\Status.cs" />
-        <Compile Include="Models\BucketDto.cs" />
-        <Compile Include="Models\PersonDto.cs" />
-        <Compile Include="Models\TaskDto.cs" />
-        <Compile Include="Models\Validators\BucketDtoValidator.cs" />
-        <Compile Include="Models\Validators\PersonDtoValidator.cs" />
-        <Compile Include="Models\Validators\TaskDtoValidator.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="Repositories\IBucketRepository.cs" />
-        <Compile Include="Repositories\BucketRepository.cs" />
-        <Compile Include="Repositories\PersonRepository.cs" />
-        <Compile Include="Repositories\InMemoryTaskRepository.cs" />
-        <Compile Include="Repositories\IPersonRepository.cs" />
-        <Compile Include="Repositories\ITaskRepository.cs" />
-        <Compile Include="Repositories\Models\Bucket.cs" />
-        <Compile Include="Repositories\Models\Person.cs" />
-        <Compile Include="Repositories\Models\Task.cs" />
-        <Compile Include="Services\IPersonService.cs" />
-        <Compile Include="Services\Service.cs" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-    <Target Name="BeforeBuild">
-    </Target>
-    <Target Name="AfterBuild">
-    </Target>
-    -->
 
 </Project>
