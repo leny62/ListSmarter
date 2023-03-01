@@ -15,5 +15,6 @@ namespace ListSmarter.Services
         void DeleteTask(Task id);
         void AssignUserToTask(int userId, int taskId);
         void UpdateTaskStatus(int taskId, Status status);
+        IEnumerable<TaskDto> GetAll();
     }
 }
