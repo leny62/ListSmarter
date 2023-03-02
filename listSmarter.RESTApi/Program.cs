@@ -1,37 +1,35 @@
-using AutoMapper;
 using ListSmarter;
-using listSmarter.RESTApi;
-using ListSmarter.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Add AutoMapper
+builder.Services.RegisterRepositories();
+builder.Services.RegisterServices();
+builder.Services.RegisterValidators();
 builder.Services.AddControllers();
 
-// Add AutoMapper Configuration
-var mapperConfig = new MapperConfiguration(mc =>
+
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
 {
-    mc.AddProfile(new AutoMapperProfile());
+    c.SwaggerDoc("v1", new() { Title = "ListSmarter.RESTApi", Version = "v1" });
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Add AutoMapper configuration
+builder.Services.AddAutoMapper((config) => { }, AppDomain.CurrentDomain.GetAssemblies());
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ListSmarter.RESTApi v1"));
 }
 
 app.UseHttpsRedirection();
-
-app.UseRouting();
 
 app.UseAuthorization();
 

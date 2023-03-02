@@ -8,14 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Task = ListSmarter.Repositories.Models.Task;
 
-namespace ListSmarter;
-
-public class AutoMapperProfile : Profile
+namespace ListSmarter
 {
-    public AutoMapperProfile()
+    public class AutoMapperProfile : Profile
     {
-        CreateMap<Bucket, BucketDto>().ReverseMap();
-        CreateMap<Person, PersonDto>().ReverseMap();
-        CreateMap<Task, TaskDto>().ReverseMap();
+        public AutoMapperProfile()
+        {
+            CreateMap<Bucket, BucketDto>().ReverseMap();
+            CreateMap<Person, PersonDto>().ReverseMap();
+            CreateMap<Task, TaskDto>().ReverseMap();
+        }
     }
 }
+

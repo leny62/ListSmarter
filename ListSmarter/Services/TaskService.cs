@@ -22,13 +22,7 @@ namespace ListSmarter.Services
             _mapper = mapper;
             _taskRepository = taskRepository;
         }
-
-        // public void DeleteTask(int id)
-        // {
-        //     var task = _taskRepository.GetById(id.Id);
-        //     _taskRepository.Delete(task);
-        // }
-
+        
         public void AssignUserToTask(int userId, int taskId)
         {
             _taskRepository.AssignUserToTask(userId, taskId);
