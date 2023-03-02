@@ -15,12 +15,6 @@ public class PersonController : ControllerBase
        _personService = personService;
    }
    
-   // Create a Person
-   [HttpPost]
-   public ActionResult<PersonDto> CreatePerson(PersonDto personDto)
-   {
-       var person = _personService.Create(personDto);
-   }
 
    // Get a Person by Id
     [HttpGet("{id}")]

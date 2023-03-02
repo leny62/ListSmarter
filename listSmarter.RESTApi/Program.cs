@@ -1,4 +1,5 @@
 using AutoMapper;
+using ListSmarter;
 using listSmarter.RESTApi;
 using ListSmarter.Services;
 
