@@ -16,5 +16,6 @@ namespace ListSmarter.Services
         IList<PersonDto> GetAllPeople();
         PersonDto GetPersonById(int personId);
         void UpdatePerson(PersonDto personDto);
+        void Create(PersonDto personDto);
     }
 }

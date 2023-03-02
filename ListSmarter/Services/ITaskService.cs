@@ -11,8 +11,8 @@ namespace ListSmarter.Services
         IEnumerable<TaskDto> GetTasksByBucketId(int bucketId);
         IEnumerable<TaskDto> GetTasksByBucketIdAndStatus(int bucketId, string status);
         TaskDto CreateTask(TaskDto taskDto);
-        void UpdateTask(TaskDto taskDto);
-        void DeleteTask(Task id);
+        void UpdateTask(int taskDto);
+        void DeleteTask(int id);
         void AssignUserToTask(int userId, int taskId);
         void UpdateTaskStatus(int taskId, Status status);
         IEnumerable<TaskDto> GetAll();
