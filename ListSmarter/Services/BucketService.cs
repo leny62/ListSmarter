@@ -1,90 +1,73 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using AutoMapper;
+using FluentValidation;
 using ListSmarter.Models;
 using ListSmarter.Repositories;
 using ListSmarter.Repositories.Models;
+using ListSmarter.Common;
 
 namespace ListSmarter.Services
 {
     public class BucketService : IBucketService
     {
-        private readonly IMapper _mapper;
         private readonly IBucketRepository _bucketRepository;
+        private readonly IValidator<BucketDto> _bucketValidator;
 
-        public BucketService(IMapper mapper, IBucketRepository bucketRepository)
+        public BucketService(IBucketRepository bucketRepository, IValidator<BucketDto> bucketValidator)
         {
-            _mapper = mapper;
             _bucketRepository = bucketRepository;
+            _bucketValidator = bucketValidator ?? throw new ArgumentNullException(nameof(bucketValidator));
         }
 
-        public IEnumerable<BucketDto> GetAll()
+        public IList<BucketDto> GetAll()
         {
             var buckets = _bucketRepository.GetAll();
-            return _mapper.Map<IEnumerable<BucketDto>>(buckets);
+            return buckets;
         }
 
         public BucketDto GetById(int id)
         {
-            var bucket = _bucketRepository.GetById(id);
-            return _mapper.Map<BucketDto>(bucket);
+            ValidateBucketId(id);
+            return _bucketRepository.GetById(id);
         }
 
-        public void CreateBucket(BucketDto bucketDto)
+     
+
+        public BucketDto CreateBucket(BucketDto bucketDto)
         {
-            _bucketRepository.Create(_mapper.Map<Bucket>(bucketDto));
+            _bucketValidator.ValidateAndThrow(bucketDto);
+            var titleTaken = _bucketRepository.GetAll().Any(b => b.Title == bucketDto.Title);
+            if (titleTaken)
+            {
+                throw new DuplicateNameException($"Bucket with title {bucketDto.Title} already exists");
+            }
+            return _bucketRepository.Create(bucketDto);
         }
 
-        public void UpdateBucket(BucketDto bucketDto)
+        public BucketDto UpdateBucket(int id, BucketDto bucketDto)
         {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteBucket(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public BucketDto Create(BucketDto bucketDto)
-        {
+            ValidateBucketId(id);
             if (bucketDto == null)
             {
                 throw new ArgumentNullException(nameof(bucketDto));
             }
-
-            var bucket = _mapper.Map<Bucket>(bucketDto);
-            bucket.Id = _bucketRepository.GetNextId();
-            _bucketRepository.Create(bucket);
-            return _mapper.Map<BucketDto>(bucket);
+            return _bucketRepository.Update(id, bucketDto);
         }
 
-        public void Update(BucketDto bucketDto)
+        public BucketDto DeleteBucket(int id)
         {
-            if (bucketDto == null)
-            {
-                throw new ArgumentNullException(nameof(bucketDto));
-            }
-
-            var bucketToUpdate = _bucketRepository.GetById(bucketDto.Id);
-            if (bucketToUpdate == null)
-            {
-                throw new ArgumentNullException(nameof(bucketDto));
-            }
-
-            _mapper.Map(bucketDto, bucketToUpdate);
-
-            _bucketRepository.Update(bucketToUpdate);
+            ValidateBucketId(id);
+            return _bucketRepository.Delete(id);
         }
-
-        public void Delete(int id)
+        
+        private void ValidateBucketId(int id)
         {
-            var bucketToDelete = _bucketRepository.GetById(id);
-            if (bucketToDelete == null)
+            if (id <= 0)
             {
-                throw new ArgumentNullException(nameof(id));
+                throw new ArgumentOutOfRangeException(nameof(id));
             }
-
-            _bucketRepository.Delete(bucketToDelete);
         }
     }
 }

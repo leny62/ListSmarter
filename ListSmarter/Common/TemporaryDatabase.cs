@@ -44,7 +44,7 @@ namespace ListSmarter.Common
                     Id = i,
                     Title = $"Task {i}",
                     Description = $"Task number {i}",
-                    Status = Status.Open,
+                    Status = Status.Open.ToString(),
                 };
                 Tasks.Add(task);
             }

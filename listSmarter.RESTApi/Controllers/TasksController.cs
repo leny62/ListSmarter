@@ -1,3 +1,4 @@
+using FluentValidation;
 using ListSmarter.Models;
 using ListSmarter.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,82 +10,137 @@ namespace listSmarter.RESTApi.Controllers;
 [Route("[controller]")]
 public class TasksController : ControllerBase
 {
-   private readonly ILogger<TasksController> _logger;
-   private readonly ITaskService _taskService;
-   
-   public TasksController(ILogger<TasksController> logger, ITaskService taskService)
-   {
-       _logger = logger;
-       _taskService = taskService;
-   }
-   
-   // Create a Task
-    [HttpPost]
-    public ActionResult<TaskDto> CreateTask(TaskDto taskDto)
-    {
-        var task = _taskService.CreateTask(taskDto);
-        return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
-    }
+    private ITaskService _taskService;
     
-    // Get a Task by ID
-    [HttpGet("{id}")]
-    
-    public IActionResult GetById(int id)
+    public TasksController(ITaskService taskService)
     {
-        var task = _taskService.GetTaskById(id);
-        if (task == null)
-        {
-            return NotFound("Task with ID " + id + " not found");
-        }
-
-        return Ok(task);
+        _taskService = taskService;
     }
     
     // Get all Tasks
     [HttpGet]
-    public ActionResult<IEnumerable<TaskDto>> GetAll()
+    public async Task<ActionResult<IEnumerable<TaskDto>>> GetAll()
     {
-        var tasks = _taskService.GetAll();
-        return Ok(tasks);
+        return await Task.FromResult(Ok(_taskService.GetAll().ToList()));
     }
     
-    // Get all Tasks by Bucket ID
-    [HttpGet("bucket/{bucketId}")]
-    public ActionResult<IEnumerable<TaskDto>> GetByBucketId(int bucketId)
+    // Get a Task by ID
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
     {
-        var tasks = _taskService.GetTasksByBucketId(bucketId);
-        return Ok(tasks);
+        try 
+        {
+            return await Task.FromResult(Ok(_taskService.GetTaskById(id)));
+        }
+        catch (KeyNotFoundException)
+        {
+            return StatusCode(404, "Task with ID " + id + " not found");
+        }
+    }
+    
+    // Create a Task
+    [HttpPost]
+    public async Task<ActionResult<TaskDto>> CreateTask(TaskDto taskDto)
+    {
+        try 
+        {
+            TaskDto task = _taskService.CreateTask(taskDto);
+            return await Task.FromResult(CreatedAtAction(nameof(GetById), new { id = task.Id }, task));
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     // Update a Task
     [HttpPut]
-    public ActionResult<TaskDto> UpdateTask(int id)
+    public async Task<IActionResult> UpdateTask([FromRoute] int id, [FromBody] TaskDto taskDto)
     {
-        try
+        try 
         {
-           _taskService.UpdateTask(id);
+            _taskService.UpdateTask(id, taskDto);
+            return await Task.FromResult(Ok());
         }
-        catch (Exception e)
+        catch (KeyNotFoundException)
         {
-            Console.WriteLine(e);
-            throw;
+            return StatusCode(404, "Task with ID " + id + " not found");
         }
-        return NoContent();
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     // Delete a Task
     [HttpDelete("{id}")]
-    public ActionResult DeleteTask(int id)
+    public async Task<IActionResult> DeleteTask(int id)
     {
-        try
+        try 
         {
             _taskService.DeleteTask(id);
-            return NoContent();
+            return await Task.FromResult(Ok());
         }
-        catch (Exception e)
+        catch (KeyNotFoundException)
         {
-            Console.WriteLine(e);
-            throw;
+            return StatusCode(404, "Task with ID " + id + " not found");
+        }
+    }
+    
+    // Assign a Task to a Person
+    [HttpPost("{taskId}/assignToPerson/{personId}")]
+    public async Task<IActionResult> AssignTaskToPerson(int taskId, PersonDto person)
+    {
+        try 
+        {
+            _taskService.AssignTaskToPerson(taskId, person);
+            return await Task.FromResult(Ok());
+        }
+        catch (KeyNotFoundException)
+        {
+            return StatusCode(404, "Task with ID " + taskId + " not found");
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    // Assign a Task to a Bucket
+    [HttpPost("{taskId}/assignToBucket/{bucketId}")]
+    public async Task<IActionResult> AssignTaskToBucket(int taskId, BucketDto bucket)
+    {
+        try 
+        {
+            _taskService.AssignTaskToBucket(taskId, bucket);
+            return await Task.FromResult(Ok());
+        }
+        catch (KeyNotFoundException)
+        {
+            return StatusCode(404, "Task with ID " + taskId + " not found");
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    // Change the status of a Task
+    [HttpPost("{taskId}/changeStatus/{status}")]
+    public async Task<IActionResult> ChangeTaskStatus([FromRoute] int taskId, [FromBody] string taskStatus)
+    {
+        try 
+        {
+            _taskService.ChangeTaskStatus(taskId, taskStatus);
+            return await Task.FromResult(Ok());
+        }
+        catch (KeyNotFoundException)
+        {
+            return StatusCode(404, "Task with ID " + taskId + " not found");
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
         }
     }
 }

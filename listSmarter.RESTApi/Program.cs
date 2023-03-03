@@ -1,4 +1,5 @@
 using ListSmarter;
+using AutoMapper.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

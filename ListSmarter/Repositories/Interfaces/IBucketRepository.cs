@@ -6,12 +6,10 @@ namespace ListSmarter.Repositories
 {
     public interface IBucketRepository
     {
-        IEnumerable<Bucket> GetAll();
+        IList<BucketDto> GetAll();
         BucketDto GetById(int id);
-        void Create(Bucket bucket);
-        void Update(BucketDto bucket);
-        void Delete(BucketDto bucket);
-        void IsNameUnique(Bucket bucket);
-        int GetNextId();
+        BucketDto Create(BucketDto bucket);
+        BucketDto Update(int id, BucketDto bucket);
+        BucketDto Delete(int bucket);
     }
 }

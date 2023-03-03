@@ -9,7 +9,7 @@ namespace ListSmarter.Models.Validators
     public TaskDtoValidator()
     {
         RuleFor(task => task.Id).GreaterThan(0);
-        RuleFor(task => task.Title).NotEmpty();
+        RuleFor(task => task.Title).NotEmpty().WithMessage("Task title cannot be empty");
         RuleFor(task => task.Description).NotEmpty();
         RuleFor(task => task.Status).NotNull();
         RuleFor(task => task.Assignee).NotNull();

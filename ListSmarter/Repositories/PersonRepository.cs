@@ -3,52 +3,61 @@ using System.Linq;
 using AutoMapper;
 using ListSmarter.Models;
 using ListSmarter.Repositories.Models;
+using ListSmarter.Common;
 
 namespace ListSmarter.Repositories
 {
     public class PersonRepository : IPersonRepository
     {
         private readonly IMapper _mapper;
-        private readonly List<Person> _persons = new List<Person>();
-        private IPersonRepository _personRepositoryImplementation;
+        private List<Person> _persons;
 
         public PersonRepository(IMapper mapper)
         {
             _mapper = mapper;
+            _persons = TemporaryDatabase.People;
         }
 
-        public IEnumerable<PersonDto> GetAll()
+        public IList<PersonDto> GetAll()
         {
-            return _mapper.Map<IEnumerable<PersonDto>>(_persons);
+            return _mapper.Map<IList<PersonDto>>(_persons);
         }
 
         public PersonDto GetById(int id)
         {
-            var person = _persons.FirstOrDefault(p => p.Id == id);
+            Person person = _persons.FirstOrDefault(p => p.Id == id);
+            if (person == null)
+            {
+                return null;
+            }
             return _mapper.Map<PersonDto>(person);
         }
         
 
-        public void Update(Person person)
+        public PersonDto Update(int id, PersonDto person)
         {
-            _personRepositoryImplementation.Update(person);
-        }
-
-        public void Delete(Person person)
-        {
-            _personRepositoryImplementation.Delete(person);
-        }
-
-        public void Delete(PersonDto personEntity)
-        {
-           var personToDelete = _persons.FirstOrDefault(p => p.Id == personEntity.Id);
-            if (personToDelete != null)
+            Person personToUpdate = _persons.FirstOrDefault(p => p.Id == id);
+            if (personToUpdate == null)
             {
-                _persons.Remove(personToDelete);
+                return null;
             }
+            personToUpdate.FirstName = person.FirstName;
+            personToUpdate.LastName = person.LastName;
+            return _mapper.Map<PersonDto>(personToUpdate);
         }
 
-        public PersonDto Create(Person personDto)
+        public PersonDto Delete(int id)
+        {
+            Person personToDelete = _persons.FirstOrDefault(p => p.Id == id);
+            if (personToDelete == null)
+            {
+                return null;
+            }
+            _persons.Remove(personToDelete);
+            return _mapper.Map<PersonDto>(personToDelete);
+        }
+        
+        public PersonDto Create(PersonDto personDto)
         {
             var person = _mapper.Map<Person>(personDto);
             person.Id = _persons.Any() ? _persons.Max(p => p.Id) + 1 : 1;

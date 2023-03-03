@@ -6,11 +6,10 @@ namespace ListSmarter.Repositories
 {
     public interface IPersonRepository
     {
-        IEnumerable<PersonDto> GetAll();
+        IList<PersonDto> GetAll();
         PersonDto GetById(int id);
-        PersonDto Create(Person person);
-        void Update(Person person);
-        void Delete(Person person);
-        void Delete(PersonDto personEntity);
+        PersonDto Create(PersonDto person);
+        PersonDto Update(int id, PersonDto person);
+        PersonDto Delete(int id);
     }
 }
