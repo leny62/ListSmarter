@@ -1,7 +1,9 @@
 using FluentValidation;
 using ListSmarter.Models;
+using ListSmarter.Repositories.Models;
 using ListSmarter.Services;
 using Microsoft.AspNetCore.Mvc;
+using Task = System.Threading.Tasks.Task;
 
 namespace listSmarter.RESTApi.Controllers
 {
@@ -39,14 +41,13 @@ namespace listSmarter.RESTApi.Controllers
             }
         }
         
-        // Create a Person
         [HttpPost]
-        public ActionResult<PersonDto> CreatePerson(PersonDto personDto)
+        public async Task<ActionResult<PersonDto>> CreatePerson(PersonDto personDto)
         {
             try 
             {
                 PersonDto person = _personService.CreatePerson(personDto);
-                return CreatedAtAction(nameof(GetById), new { id = person.Id }, person);
+                return await Task.FromResult(CreatedAtAction(nameof(GetById), new { id = person.Id }, person));
             }
             catch (ValidationException e)
             {

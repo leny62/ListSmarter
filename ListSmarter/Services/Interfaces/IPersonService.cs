@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ListSmarter.Models;
+using ListSmarter.Repositories.Models;
 
 namespace ListSmarter.Services
 {
