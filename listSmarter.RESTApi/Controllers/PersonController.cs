@@ -74,6 +74,20 @@ namespace listSmarter.RESTApi.Controllers
             }
         }
         
+        // Delete a Person
+        [HttpDelete("{id}")]
+        public IActionResult DeletePerson(int id)
+        {
+            try 
+            {
+                _personService.DeletePerson(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Person with ID " + id + " not found");
+            }
+        }
     }
 }
 

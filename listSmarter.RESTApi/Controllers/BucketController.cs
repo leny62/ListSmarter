@@ -53,7 +53,7 @@ namespace listSmarter.RESTApi.Controllers
         
         // Update a Bucket
         [HttpPut]
-        public async Task<IActionResult> UpdateBucket([FromRoute] int id, [FromBody] BucketDto bucketDto)
+        public async Task<IActionResult> UpdateBucket(int id, [FromBody] BucketDto bucketDto)
         {
             try 
             {

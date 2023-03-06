@@ -12,8 +12,8 @@ namespace ListSmarter.Services
         TaskDto UpdateTask(int id, TaskDto task);
         TaskDto DeleteTask(int id);
         IList<TaskDto> GetAll();
-        TaskDto AssignTaskToPerson (int taskId, PersonDto person);
-        TaskDto AssignTaskToBucket (int taskId, BucketDto bucket);
+        TaskDto AssignTaskToPerson (int taskId, int personId);
+        TaskDto AssignTaskToBucket(int taskId, int bucket);
         TaskDto ChangeTaskStatus (int taskId, string status);
     }
 }

@@ -89,11 +89,11 @@ public class TasksController : ControllerBase
     
     // Assign a Task to a Person
     [HttpPost("{taskId}/assignToPerson/{personId}")]
-    public async Task<IActionResult> AssignTaskToPerson(int taskId, PersonDto person)
+    public async Task<IActionResult> AssignTaskToPerson(int taskId, int personId)
     {
         try 
         {
-            _taskService.AssignTaskToPerson(taskId, person);
+            _taskService.AssignTaskToPerson(taskId, personId);
             return await Task.FromResult(Ok());
         }
         catch (KeyNotFoundException)
@@ -108,11 +108,11 @@ public class TasksController : ControllerBase
     
     // Assign a Task to a Bucket
     [HttpPost("{taskId}/assignToBucket/{bucketId}")]
-    public async Task<IActionResult> AssignTaskToBucket(int taskId, BucketDto bucket)
+    public async Task<IActionResult> AssignTaskToBucket(int taskId, int bucketId)
     {
         try 
         {
-            _taskService.AssignTaskToBucket(taskId, bucket);
+            _taskService.AssignTaskToBucket(taskId, bucketId);
             return await Task.FromResult(Ok());
         }
         catch (KeyNotFoundException)
@@ -127,7 +127,7 @@ public class TasksController : ControllerBase
     
     // Change the status of a Task
     [HttpPost("{taskId}/changeStatus/{status}")]
-    public async Task<IActionResult> ChangeTaskStatus([FromRoute] int taskId, [FromBody] string taskStatus)
+    public async Task<IActionResult> ChangeTaskStatus(int taskId, string taskStatus)
     {
         try 
         {

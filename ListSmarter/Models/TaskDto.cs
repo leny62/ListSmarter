@@ -1,4 +1,5 @@
 using ListSmarter.Enums;
+using ListSmarter.Repositories.Models;
 
 namespace ListSmarter.Models
 {
@@ -8,7 +9,7 @@ namespace ListSmarter.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
-        public PersonDto? Assignee { get; set; }
-        public BucketDto? Bucket { get; set; }
+        public Person Assignee { get; set; }
+        public Bucket Bucket { get; set; }
     }
 }

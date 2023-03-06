@@ -1,439 +1,162 @@
-﻿using System;
+﻿using ListSmarter.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
-using ListSmarter.Repositories;
+using FluentValidation;
+using ListSmarter.ConsoleUI.Controllers;
 using ListSmarter.Models;
+using ListSmarter.Repositories;
 using ListSmarter.Repositories.Models;
 using ListSmarter.Services;
-using ListSmarter.Models.Validators;
-using ListSmarter.Enums;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Task = ListSmarter.Repositories.Models.Task;
+using ListSmarter.ConsoleUI.Controllers;
+using ListSmarter.Models.Validators;
+using AutoMapper;
 
 namespace ListSmarter.ConsoleUI
 {
     class Program
     {
+        static IServiceProvider CreateServiceProvider()
+        {
+            var services = new ServiceCollection();
+            
+            services.AddSingleton<IPersonRepository, PersonRepository>();
+            services.AddSingleton<IPersonService, PersonService>();
+            services.AddSingleton<IValidator<PersonDto>, PersonDtoValidator>();
+            
+            // Bucket 
+            services.AddSingleton<IBucketRepository, BucketRepository>();
+            services.AddSingleton<IBucketService, BucketService>();
+            services.AddSingleton<IValidator<BucketDto>, BucketDtoValidator>();
+            
+            // Task
+            
+            services.AddSingleton<ITaskRepository, TaskRepository>();
+            services.AddSingleton<ITaskService, TaskService>();
+            services.AddSingleton<IValidator<TaskDto>, TaskDtoValidator>();
+            
+            // AutoMapper
+            services.AddAutoMapper(typeof(AutoMapperProfile));
+            return services.BuildServiceProvider();
+        }
+        
         static void Main(string[] args)
         {
-            var mapperConfig = new AutoMapper.MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Bucket, BucketDto>();
-                cfg.CreateMap<BucketDto, Bucket>();
-                cfg.CreateMap<Person, PersonDto>();
-                cfg.CreateMap<PersonDto, Person>();
-                cfg.CreateMap<Task, TaskDto>()
-                    .ForMember(dest => dest.Assignee, opt => opt.MapFrom(src => src.Assignee.Id))
-                    .ForMember(dest => dest.Bucket, opt => opt.MapFrom(src => src.Bucket.Id));
-                cfg.CreateMap<TaskDto, Task>();
-            });
+            var serviceProvider = CreateServiceProvider();
+            var personService = serviceProvider.GetService<IPersonService>();
+            var personController = new PersonController(personService, serviceProvider.GetService<ITaskService>(), serviceProvider.GetService<IValidator<PersonDto>>(), serviceProvider.GetService<IValidator<TaskDto>>());
+            var bucketService = serviceProvider.GetService<IBucketService>();
+            var bucketController = new BucketController(bucketService, serviceProvider.GetService<ITaskService>(), serviceProvider.GetService<IValidator<BucketDto>>(), serviceProvider.GetService<IValidator<TaskDto>>());
             
-            var mapper = mapperConfig.CreateMapper();
-            
-            var bucketRepository = new BucketRepository(mapper);
-            var bucketService = new BucketService(mapper, bucketRepository);
-            
-            var personRepository = new PersonRepository(mapper);
-            var personService = new PersonService(mapper, personRepository);
-
-            var taskRepository = new TaskRepository(mapper, personRepository);
-            var taskService = new TaskService(mapper, taskRepository);
-            
-            // var bucketDto = new BucketDto
-            // {
-            //     Title = "Bucket 1",
-            // };
-            //
-            // bucketService.Create(bucketDto);
-            // Console.WriteLine(bucketDto.Title);
-            // Console.WriteLine("The above is the created Bucket");
+            var taskService = serviceProvider.GetService<ITaskService>();
+            var taskController = new TaskController(taskService, serviceProvider.GetService<IPersonService>(), serviceProvider.GetService<IBucketService>(), serviceProvider.GetService<IValidator<TaskDto>>());
 
             while (true)
             {
-                Console.WriteLine("Please select an option");
-                Console.WriteLine("1. Create a bucket");
-                Console.WriteLine("2. Update a bucket");
-                Console.WriteLine("3. List all  Buckets");
-                Console.WriteLine("4. Get a bucket by id");
-                Console.WriteLine("5. Delete a bucket");
+                // People
+                Console.WriteLine("1. Create a Person");
+                Console.WriteLine("2. Get All People");
+                Console.WriteLine("3. Get Person By Id");
+                Console.WriteLine("4. Update Person");
+                Console.WriteLine("5. Delete Person");
                 
-                // Person Menu
-                Console.WriteLine("6. Create a person");
-                Console.WriteLine("7. Update a person");
-                Console.WriteLine("8. List all  Persons");
-                Console.WriteLine("9. Get a person by id");
-                Console.WriteLine("10. Delete a person");
+                // Bucket
+                Console.WriteLine("6. Create a Bucket");
+                Console.WriteLine("7. Get All Buckets");
+                Console.WriteLine("8. Get Bucket By Id");
+                Console.WriteLine("9. Update Bucket");
+                Console.WriteLine("10. Delete Bucket");
                 
-                // Task Menu
-                Console.WriteLine("11. Create a task");
-                Console.WriteLine("12. Update a task");
-                Console.WriteLine("13. List all  Tasks");
-                Console.WriteLine("14. Get a task by id");
-                Console.WriteLine("15. Delete a task");
-                Console.WriteLine("16. Assign a person to a task");
-                Console.WriteLine("17. Change Task Status");
+                // Task
                 
-                // Menu
-                Console.WriteLine("18. Display Buckets and associated tasks and People in a Table Format");
-                
-
-                Console.WriteLine("19. Exit");
-                
-                var option = int.Parse(Console.ReadLine());
-
-                TaskDto? task;
-                string? newTitle;
-                string? personId;
-                PersonDto? person;
-                IEnumerable<BucketDto>? buckets;
-                switch (option)
+                Console.WriteLine("11. Create a Task");
+                Console.WriteLine("12. Get All Tasks");
+                Console.WriteLine("13. Get Task By Id");
+                Console.WriteLine("14. Update Task");
+                Console.WriteLine("15. Delete Task");
+                Console.WriteLine("16. Assign Task to Person");
+                Console.WriteLine("17. Assign Task to Bucket");
+                Console.WriteLine("18. Change Task Status");
+                Console.WriteLine("19. Get All Tasks for a Person");
+                Console.WriteLine("20. Get All Tasks for a Bucket");
+                Console.Write("Enter your choice: ");
+                var choice = Console.ReadLine();
+                switch (choice)
                 {
-                    case 1:
-                        Console.WriteLine("Please enter a title for the bucket");
-                        var title = Console.ReadLine();
-                        var bucket = new BucketDto
-                        {
-                            Title = title,
-                        };
-                        bucketService.Create(bucket);
+                    case "1":
+                        personController.GetAllPeople();
                         break;
-                    case 2:
-                        Console.WriteLine("Please enter the id of the bucket you want to update");
-                        var id = Console.ReadLine();
-                        var bucketToUpdate = bucketService.GetById(int.Parse(id));
-                        Console.WriteLine("Please enter a new title for the bucket");
-                        newTitle = Console.ReadLine();
-                        bucketToUpdate.Title = newTitle;
-                        bucketService.Update(bucketToUpdate);
+                    case "2":
+                        personController.CreatePerson();
                         break;
-                    case 3:
-                        Console.WriteLine("All buckets:");
-                        buckets = bucketService.GetAll();
-                        if (buckets == null)
-                        {
-                            Console.WriteLine("No buckets found");
-                            break;
-                        }
-                        foreach (var b in buckets)
-                        {
-                            Console.WriteLine(b.Title);
-                        }
+                    case "3":
+                        personController.GetPersonById();
                         break;
-                    case 4:
-                        Console.WriteLine("Please enter the id of the bucket you want to get");
-                        var bucketId = Console.ReadLine();
-                        var bucketToGet = bucketService.GetById(int.Parse(bucketId));
-                        if (bucketToGet == null)
-                        {
-                            Console.WriteLine("No bucket found");
-                            break;
-                        }
-                        Console.WriteLine(bucketToGet.Title);
+                    case "4":
+                        personController.UpdatePerson();
                         break;
-                    case 5:
-                        Console.WriteLine("Please enter the id of the bucket you want to delete");
-                        var bucketToDeleteId = Console.ReadLine();
-                        var bucketToDelete = bucketService.GetById(int.Parse(bucketToDeleteId));
-                        if (bucketToDelete == null)
-                        {
-                            Console.WriteLine("No bucket found");
-                            break;
-                        }
-                        bucketService.Delete(1);
-                        Console.WriteLine($"Bucket {bucketToDelete.Title} deleted");
+                    case "5":
+                        personController.DeletePerson();
                         break;
-                    case 6:
-                        Console.WriteLine("Please enter the First Name for the person");
-                        var firstName = Console.ReadLine();
-                        Console.WriteLine("Please enter the Last Name for the person");
-                        var lastName = Console.ReadLine();
-                        person = new PersonDto
-                        {
-                            FirstName = firstName,
-                            LastName = lastName,
-                        };
-                        personService.Create(person);
+                    case "6":
+                        bucketController.CreateBucket();
                         break;
-                    case 7:
-                        Console.WriteLine("Please enter the id of the person you want to update");
-                        personId = Console.ReadLine();
-                        var personToUpdate = personService.GetById(int.Parse(personId));
-                        if (personToUpdate == null)
-                        {
-                            Console.WriteLine("No person found");
-                            break;
-                        }
-                        Console.WriteLine("Please enter a new First Name for the person");
-                        var newFirstName = Console.ReadLine();
-                        Console.WriteLine("Please enter a new Last Name for the person");
-                        var newLastName = Console.ReadLine();
-                        personToUpdate = new PersonDto()
-                        {
-                            FirstName = newFirstName,
-                            LastName = newLastName
-                        };
-                        personService.Update(personToUpdate);
+                    case "7":
+                        bucketController.GetAllBuckets();
                         break;
-                    case 8:
-                        Console.WriteLine("All persons:");
-                        var persons = personService.GetAll();
-                        if (persons == null)
-                        {
-                            Console.WriteLine("No persons found");
-                            break;
-                        }
-                        foreach (var p in persons)
-                        {
-                            Console.WriteLine($"{p.Id} || {p.FirstName} {p.LastName}");
-                        }
+                    case "8":
+                        bucketController.GetBucketById();
                         break;
-                    case 9:
-                        Console.WriteLine("Please enter the id of the person you want to get");
-                        var personToGetId = Console.ReadLine();
-                        var personToGet = personService.GetById(int.Parse(personToGetId));
-                        if (personToGet == null)
-                        {
-                            Console.WriteLine("No person found");
-                            break;
-                        }
-
-                        ;
-                        Console.WriteLine($"{personToGet.Id} || {personToGet.FirstName} {personToGet.LastName}");
+                    case "9":
+                        bucketController.UpdateBucket();
                         break;
-                    case 10:
-                        Console.WriteLine("Please enter the id of the person you want to delete");
-                        var personToDeleteId = Console.ReadLine();
-                        var personToDelete = personService.GetById(int.Parse(personToDeleteId));
-                        if (personToDelete == null)
-                        {
-                            Console.WriteLine("No person found");
-                            break;
-                        }
-                        Console.WriteLine($"Person {personToDelete.FirstName} {personToDelete.LastName} deleted");
-                        personService.Delete(int.Parse(personToDeleteId));
+                    case "10":
+                        bucketController.DeleteBucket();
                         break;
-                    case 11:
-                        // task = new TaskDto();
-                        // Console.WriteLine("Please enter the title for the task");
-                        // task.Title = Console.ReadLine();
-                        // Console.WriteLine("Please enter the description for the task");
-                        // task.Description = Console.ReadLine();
-                        // Console.WriteLine("Please select a status for the task:");
-                        // Console.WriteLine("1. Not started");
-                        // Console.WriteLine("2. In progress");
-                        // Console.WriteLine("3. Completed");
-                        //
-                        // int statusChoice;
-                        // while (!int.TryParse(Console.ReadLine(), out statusChoice) || statusChoice < 1 || statusChoice > 3)
-                        // {
-                        //     Console.WriteLine("Invalid choice. Please enter a number between 1 and 3:");
-                        // }
-                        //
-                        // switch (statusChoice)
-                        // {
-                        //     case 1:
-                        //         task.Status = Status.Open;
-                        //         break;
-                        //     case 2:
-                        //         task.Status = Status.InProgress;
-                        //         break;
-                        //     case 3:
-                        //         task.Status = Status.Closed;
-                        //         break;
-                        // };
-                        //
-                        // Console.WriteLine("Please enter the id of the bucket you want to assign the task to");
-                        // var bucketIdForTask = Console.ReadLine();
-                        // var bucketForTask = bucketService.GetById(int.Parse(bucketIdForTask));
-                        // if (bucketForTask == null)
-                        // {
-                        //     Console.WriteLine("No bucket found");
-                        //     break;
-                        // }
-                        //
-                        // task.Bucket = int.Parse(bucketIdForTask);
-                        // // log all entered data
-                        // Console.WriteLine($"Title: {task.Title} + Description: {task.Description} + Status: {task.Status} + Bucket: {task.Bucket}");
-                        taskService.CreateTask();
+                    case "11":
+                        taskController.CreateTask();
                         break;
-                    case 12:
-                        task = new TaskDto();
-                        Console.WriteLine("Enter the Id of a task to update:");
-                        var taskId = Console.ReadLine();
-                        var taskToUpdate = taskService.GetById(int.Parse(taskId));
-                        if (taskToUpdate == null)
-                        {
-                            Console.WriteLine("No task found");
-                            break;
-                        }
-                        Console.WriteLine("Please enter a new title for the task");
-                        newTitle = Console.ReadLine();
-                        Console.WriteLine("Please enter a new description for the task");
-                        var newDescription = Console.ReadLine();
-                        Console.WriteLine("Please select a new status for the task:");
-                        Console.WriteLine("1. Not started");
-                        Console.WriteLine("2. In progress");
-                        Console.WriteLine("3. Completed");
-                        int newStatusChoice;
-                        while (!int.TryParse(Console.ReadLine(), out newStatusChoice) || newStatusChoice < 1 || newStatusChoice > 3)
-                        {
-                            Console.WriteLine("Invalid choice. Please enter a number between 1 and 3:");
-                        }
-
-                        switch (newStatusChoice)
-                        {
-                            case 1:
-                                task.Status = Status.Open;
-                                break;
-                            case 2:
-                                task.Status = Status.InProgress;
-                                break;
-                            case 3:
-                                task.Status = Status.Closed;
-                                break;
-                        }
-
-                        ;
-                        Console.WriteLine("Please enter the id of the bucket you want to assign the task to");
-                        var newBucketIdForTask = Console.ReadLine();
-                        var newBucketForTask = bucketService.GetById(int.Parse(newBucketIdForTask));
-                        if (newBucketForTask == null)
-                        {
-                            Console.WriteLine("No bucket found");
-                            break;
-                        }
-                        Console.WriteLine("Enter the Id the person you want to assign the task to:");
-                        var personIdForTask = Console.ReadLine();
-                        var personForTask = personService.GetById(int.Parse(personIdForTask));
-                        if (personForTask == null)
-                        {
-                            Console.WriteLine("No person found");
-                            break;
-                        }
-                        taskToUpdate = new TaskDto()
-                        {
-                            Title = newTitle,
-                            Description = newDescription,
-                            Status = task.Status,
-                            Bucket = int.Parse(newBucketIdForTask),
-                            Assignee = int.Parse(personIdForTask)
-                        };
-                        taskService.Update(taskToUpdate);
+                    case "12":
+                        taskController.GetAllTasks();
                         break;
-                    case 13:
-                        Console.WriteLine("All tasks:");
-                        try
-                        {
-                            var tasks = taskService.GetAll();
-                            if (tasks == null)
-                            {
-                                Console.WriteLine("No tasks found");
-                                break;
-                            }
-                            foreach (var t in tasks)
-                            {
-                                Console.WriteLine((object?)$"{t.Id} || {t.Title} || {t.Description} || {t.Status} || {t.Bucket} || {t.Assignee}");
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            throw;
-                        }
-                        
+                    case "13":
+                        taskController.GetTaskById();
                         break;
-                    case 14:
-                        Console.WriteLine("Enter the Id of the task");
-                        var taskToGetId = Console.ReadLine();
-                        var taskToGet = taskService.GetById(int.Parse(taskToGetId));
-                        if (taskToGet == null)
-                        {
-                            Console.WriteLine("No task found");
-                            break;
-                        };
-                        Console.WriteLine($"{taskToGet.Id} || {taskToGet.Title} || {taskToGet.Description} || {taskToGet.Status} || {taskToGet.Bucket} || {taskToGet.Assignee}");
+                    case "14":
+                        taskController.UpdateTask();
                         break;
-                    case 15:
-                        Console.WriteLine("Enter the Id of the task you want to delete");
-                        var taskToDeleteId = Console.ReadLine();
-                        var taskToDelete = taskService.GetById(int.Parse(taskToDeleteId));
-                        if (taskToDelete == null)
-                        {
-                            Console.WriteLine("No task found");
-                            break;
-                        }
-                        Console.WriteLine($"Task {taskToDelete.Title} deleted");
-                        taskService.DeleteTask(int.Parse(taskToDeleteId));
+                    case "15":
+                        taskController.DeleteTask();
                         break;
-                    case 16:
-                        Console.WriteLine("Enter the Id of the person you want to assign to a task");
-                        personId = Console.ReadLine();
-                        person = personService.GetById(int.Parse(personId));
-                        if (person == null)
-                        {
-                            Console.WriteLine("No person found");
-                            break;
-                        }
-                        Console.WriteLine("Enter the Id of the task you want to assign to the person");
-                        var taskIdForPerson = Console.ReadLine();
-                        var taskForPerson = taskService.GetById(int.Parse(taskIdForPerson));
-                        if (taskForPerson == null)
-                        {
-                            Console.WriteLine("No task found");
-                            break;
-                        }
-                        taskForPerson.Assignee = int.Parse(personId);
-                        // now we call AssignUserToTask method from TaskService
-                        taskService.AssignUserToTask( int.Parse(personId), int.Parse(taskIdForPerson));
+                    case "16":
+                        taskController.AssignTaskToPerson();
                         break;
-                    case 17:
-                        Console.WriteLine("Enter the Id of the task you want to update the status of");
-                        Console.WriteLine();
-                        int taskIdForTask = Convert.ToInt32(Console.ReadLine());
-                        var taskForTask = taskService.GetById(taskIdForTask);
-                        if (taskForTask == null)
-                        {
-                            Console.WriteLine("No task found");
-                            break;
-                        }
-                        Console.WriteLine("Please select a new status for the task:"); 
-                        Console.WriteLine("1. Open");
-                        Console.WriteLine("2. In progress");
-                        Console.WriteLine("3. Closed");
-                        string newStatusChoiceForTask = Console.ReadLine();
-                        if (!string.IsNullOrEmpty(newStatusChoiceForTask) && Enum.IsDefined(typeof(Status), newStatusChoiceForTask))
-                        {
-                            taskForTask.Status = (Status)Enum.Parse(typeof(Status), newStatusChoiceForTask);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid choice. Please enter a number between 1 and 3:");
-                        } ;
-                        taskService.UpdateTaskStatus(taskIdForTask, taskForTask.Status);
+                    case "17":
+                        taskController.AssignTaskToBucket();
                         break;
-                    case 18:
-                        Console.WriteLine("ListSmarter Dashboard");
-                        // display all buckets in a table format
-                        buckets = bucketService.GetAll();
-                        if (buckets == null)
-                        {
-                            Console.WriteLine("No buckets found");
-                            break;
-                        }
-                        Console.WriteLine("Buckets:");
-                        // Below display each bucket's tasks
-                        foreach (var b in buckets)
-                        {
-                            var tasksOfBucket = taskService.GetAll().Where(t => t.Bucket == b.Id);
-                            Console.WriteLine($"{b.Title}");
-                            foreach (var t in tasksOfBucket)
-                            {
-                                Console.WriteLine($"{t.Id} || {t.Title} || {t.Description} || {t.Status} || {t.Bucket} || {t.Assignee}");
-                            }
-                        }
+                    case "18":
+                        taskController.ChangeTaskStatus();
                         break;
-                    case 19:
-                        return;
+                    case "19":
+                        taskController.GetAllTasksForPerson();
+                        break;
+                    case "20":
+                        taskController.GetAllTasksForBucket();
+                        break;
                     default:
-                        Console.WriteLine("Invalid option");
+                        Console.WriteLine("Invalid choice");
                         break;
                 }
             }

@@ -79,6 +79,64 @@ namespace ListSmarter.Repositories
             return _mapper.Map<TaskDto>(taskToUpdate);
         }
         
+        public TaskDto AssignTaskToPerson(int taskId, int personId)
+        {
+            var task = _tasks.FirstOrDefault(t => t.Id == taskId);
+            if (task == null)
+            {
+                return null;
+            }
+            var person = _people.FirstOrDefault(p => p.Id == personId);
+            if (person == null)
+            {
+                return null;
+            }
+            if (task.Assignee != null)
+            {
+                // Add to list of tasks
+                task.Assignee.Tasks.Add(task);
+            }
+
+            task.Assignee = person;
+            person.Tasks.Add(task);
+            return _mapper.Map<TaskDto>(task);
+        }
+        
+        public TaskDto AssignTaskToBucket(int taskId, int bucketId)
+        {
+            var task = _tasks.FirstOrDefault(t => t.Id == taskId);
+            if (task == null)
+            {
+                return null;
+            }
+            var bucket = _buckets.FirstOrDefault(b => b.Id == bucketId);
+            if (bucket == null)
+            {
+                return null;
+            }
+            if (task.Bucket != null)
+            {
+                // Add to list of tasks
+                task.Bucket.Tasks.Add(task);
+            }
+            task.Bucket = bucket;
+            bucket.Tasks.Add(task);
+            return _mapper.Map<TaskDto>(task);
+        }
+        
+        public TaskDto ChangeTaskStatus(int taskId, string status)
+        {
+            var task = _tasks.FirstOrDefault(t => t.Id == taskId);
+            if (task == null)
+            {
+                return null;
+            }
+            // get the enum value from the string
+            Status newStatus = (Status) System.Enum.Parse(typeof(Status), status);
+            task.Status = newStatus.ToString();
+            return _mapper.Map<TaskDto>(task);
+        }
+        
         public TaskDto Delete(int id)
         {
             Task task = _tasks.FirstOrDefault(t => t.Id == id);

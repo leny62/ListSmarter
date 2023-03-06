@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ListSmarter;
 using AutoMapper.Configuration;
 
@@ -18,7 +19,11 @@ builder.Services.AddSwaggerGen(c =>
 
 // Add AutoMapper configuration
 builder.Services.AddAutoMapper((config) => { }, AppDomain.CurrentDomain.GetAssemblies());
-
+// Modify JsonSerializerOptions to include ReferenceHandler.Preserve
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 
 var app = builder.Build();
 

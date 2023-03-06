@@ -54,39 +54,33 @@ namespace ListSmarter.Services
             return _taskRepository.GetAll();
         }
         
-        public TaskDto AssignTaskToPerson(int taskId, PersonDto person)
+        public TaskDto AssignTaskToPerson(int taskId, int personId)
         {
             ValidateTaskId(taskId);
-            TaskDto task = new TaskDto() { Assignee = person };
-            return _taskRepository.Update(taskId, task);
+            return _taskRepository.AssignTaskToPerson(taskId, personId);
         }
         
-        public TaskDto AssignTaskToBucket(int taskId, BucketDto bucket)
+        public TaskDto AssignTaskToBucket(int taskId, int bucketId)
         {
             ValidateTaskId(taskId);
-            TaskDto task = new TaskDto() { Bucket = bucket };
-            return _taskRepository.Update(taskId, task);
+            return _taskRepository.AssignTaskToBucket(taskId, bucketId);
         }
         
         public TaskDto ChangeTaskStatus(int taskId, string status)
         {
             ValidateTaskId(taskId);
-            ValidateTaskStatus(status);
-            TaskDto task = new TaskDto() { Status = status };
-            return _taskRepository.Update(taskId, task);
+            return _taskRepository.ChangeTaskStatus(taskId, status);
         }
 
         private void ValidateTaskStatus(string status)
         {
+          // Validate if the string is a valid enum identifier
             if (!Enum.IsDefined(typeof(TaskStatus), status))
             {
-                throw new InvalidEnumArgumentException("Task status is not valid");
+                throw new ArgumentException("Invalid Task Status");
             }
+            // validate if string is not empty
             if (string.IsNullOrEmpty(status))
-            {
-                throw new ArgumentException("Task status cannot be empty");
-            }
-            if (string.IsNullOrWhiteSpace(status))
             {
                 throw new ArgumentException("Task status cannot be empty");
             }
