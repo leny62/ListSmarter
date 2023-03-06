@@ -61,7 +61,7 @@ namespace ListSmarter.ConsoleUI
             var bucketController = new BucketController(bucketService, serviceProvider.GetService<ITaskService>(), serviceProvider.GetService<IValidator<BucketDto>>(), serviceProvider.GetService<IValidator<TaskDto>>());
             
             var taskService = serviceProvider.GetService<ITaskService>();
-            var taskController = new TaskController(taskService, serviceProvider.GetService<IPersonService>(), serviceProvider.GetService<IBucketService>(), serviceProvider.GetService<IValidator<TaskDto>>());
+            var taskController = new TaskController(taskService, serviceProvider.GetService<IBucketService>(), serviceProvider.GetService<IPersonService>(), serviceProvider.GetService<IValidator<TaskDto>>());
 
             while (true)
             {
