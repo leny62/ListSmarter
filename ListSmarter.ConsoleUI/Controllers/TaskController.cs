@@ -5,6 +5,7 @@ using ListSmarter.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ListSmarter.Enums;
 
 namespace ListSmarter.ConsoleUI.Controllers;
 
@@ -41,7 +42,7 @@ public class TaskController
             Id = _taskService.GetAll().Max(t => t.Id) + 1,
             Title = title,
             Description = description,
-            Status = status
+            Status = (Status) System.Enum.Parse(typeof(Status), status)
         };
         _taskValidator.ValidateAndThrow(task);
         _taskService.CreateTask(task);
@@ -86,7 +87,7 @@ public class TaskController
             Id = id,
             Title = title,
             Description = description,
-            Status = status
+            Status = (Status) System.Enum.Parse(typeof(Status), status)
         };
         _taskValidator.ValidateAndThrow(task);
         _taskService.UpdateTask(id, task);

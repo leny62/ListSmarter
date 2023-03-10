@@ -36,18 +36,14 @@ namespace ListSmarter.ConsoleUI
             services.AddSingleton<IPersonService, PersonService>();
             services.AddSingleton<IValidator<PersonDto>, PersonDtoValidator>();
             
-            // Bucket 
             services.AddSingleton<IBucketRepository, BucketRepository>();
             services.AddSingleton<IBucketService, BucketService>();
             services.AddSingleton<IValidator<BucketDto>, BucketDtoValidator>();
-            
-            // Task
             
             services.AddSingleton<ITaskRepository, TaskRepository>();
             services.AddSingleton<ITaskService, TaskService>();
             services.AddSingleton<IValidator<TaskDto>, TaskDtoValidator>();
             
-            // AutoMapper
             services.AddAutoMapper(typeof(AutoMapperProfile));
             return services.BuildServiceProvider();
         }
@@ -65,21 +61,18 @@ namespace ListSmarter.ConsoleUI
 
             while (true)
             {
-                // People
                 Console.WriteLine("1. Create a Person");
                 Console.WriteLine("2. Get All People");
                 Console.WriteLine("3. Get Person By Id");
                 Console.WriteLine("4. Update Person");
                 Console.WriteLine("5. Delete Person");
                 
-                // Bucket
                 Console.WriteLine("6. Create a Bucket");
                 Console.WriteLine("7. Get All Buckets");
                 Console.WriteLine("8. Get Bucket By Id");
                 Console.WriteLine("9. Update Bucket");
                 Console.WriteLine("10. Delete Bucket");
                 
-                // Task
                 
                 Console.WriteLine("11. Create a Task");
                 Console.WriteLine("12. Get All Tasks");
@@ -93,6 +86,7 @@ namespace ListSmarter.ConsoleUI
                 Console.WriteLine("20. Get All Tasks for a Bucket");
                 Console.Write("Enter your choice: ");
                 var choice = Console.ReadLine();
+                
                 switch (choice)
                 {
                     case "1":

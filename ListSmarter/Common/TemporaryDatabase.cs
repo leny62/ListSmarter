@@ -44,7 +44,7 @@ namespace ListSmarter.Common
                     Id = i,
                     Title = $"Task {i}",
                     Description = $"Task number {i}",
-                    Status = Status.Open.ToString(),
+                    Status = (Status) System.Enum.Parse(typeof(Status), "Open"),
                 };
                 Tasks.Add(task);
             }

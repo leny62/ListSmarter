@@ -27,7 +27,7 @@ namespace ListSmarter.Services
         public TaskDto GetTaskById(int id)
         {
             ValidateTaskId(id);
-            return _taskRepository.GetById(id);
+            return _taskRepository.GetTaskById(id);
         }
         
         public TaskDto CreateTask(TaskDto task)
@@ -51,41 +51,48 @@ namespace ListSmarter.Services
         
         public IList<TaskDto> GetAll()
         {
-            return _taskRepository.GetAll();
+            return _taskRepository.GetAllTasks();
         }
         
         public TaskDto AssignTaskToPerson(int taskId, int personId)
         {
             ValidateTaskId(taskId);
-            return _taskRepository.AssignTaskToPerson(taskId, personId);
+            TaskDto task = _taskRepository.GetTaskById(taskId);
+            task = new TaskDto
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Assignee = personId
+            };
+            return _taskRepository.Update(taskId, task);
         }
         
         public TaskDto AssignTaskToBucket(int taskId, int bucketId)
         {
             ValidateTaskId(taskId);
-            return _taskRepository.AssignTaskToBucket(taskId, bucketId);
+            TaskDto task = _taskRepository.GetTaskById(taskId);
+            task = new TaskDto
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Bucket = bucketId
+            };
+            return _taskRepository.Update(taskId, task);
         }
         
         public TaskDto ChangeTaskStatus(int taskId, string status)
         {
             ValidateTaskId(taskId);
-            return _taskRepository.ChangeTaskStatus(taskId, status);
-        }
-
-        private void ValidateTaskStatus(string status)
-        {
-          // Validate if the string is a valid enum identifier
-            if (!Enum.IsDefined(typeof(TaskStatus), status))
+            TaskDto task = _taskRepository.GetTaskById(taskId);
+            task = new TaskDto
             {
-                throw new ArgumentException("Invalid Task Status");
-            }
-            // validate if string is not empty
-            if (string.IsNullOrEmpty(status))
-            {
-                throw new ArgumentException("Task status cannot be empty");
-            }
+                Id = task.Id,
+                Title = task.Title,
+                Status = (Status) System.Enum.Parse(typeof(Status), status)
+            };
+            return _taskRepository.Update(taskId, task);
         }
-
+        
         private void ValidateTaskId(int id)
         {
             if (id <= 0)
