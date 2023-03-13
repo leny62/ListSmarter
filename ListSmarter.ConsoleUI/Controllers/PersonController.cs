@@ -1,10 +1,6 @@
 using FluentValidation;
-using ListSmarter.Repositories.Models;
 using ListSmarter.Services;
 using ListSmarter.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ListSmarter.ConsoleUI.Controllers;
 
@@ -23,7 +19,7 @@ public class PersonController
        _taskValidator = taskValidator;
    }
    
-    public void CreatePerson()
+    public void Create()
     {
          Console.WriteLine("Enter first name:");
          var firstName = Console.ReadLine();
@@ -31,35 +27,32 @@ public class PersonController
          var lastName = Console.ReadLine();
          var person = new PersonDto
          {
-                Id = _personService.GetAllPeople().Max(p => p.Id) + 1,
+                Id = _personService.GetAll().Max(p => p.Id) + 1,
               FirstName = firstName,
               LastName = lastName
          };
          _personValidator.ValidateAndThrow(person);
-         _personService.CreatePerson(person);
+         _personService.Create(person);
     }
     
-    // Get all people
-    public void GetAllPeople()
+    public void GetAll()
     {
-        var people = _personService.GetAllPeople();
+        var people = _personService.GetAll();
         foreach (var person in people)
         {
             Console.WriteLine($"Id: {person.Id}, First Name: {person.FirstName}, Last Name: {person.LastName}");
         }
     }
     
-    // Get person by id
-    public void GetPersonById()
+    public void GetById()
     {
         Console.WriteLine("Enter person id:");
         var id = int.Parse(Console.ReadLine());
-        var person = _personService.GetPersonById(id);
+        var person = _personService.GetById(id);
         Console.WriteLine($"Id: {person.Id}, First Name: {person.FirstName}, Last Name: {person.LastName}");
     }
     
-    // Update person
-    public void UpdatePerson()
+    public void Update()
     {
         Console.WriteLine("Enter person id:");
         var id = int.Parse(Console.ReadLine());
@@ -74,15 +67,14 @@ public class PersonController
             LastName = lastName
         };
         _personValidator.ValidateAndThrow(person);
-        _personService.UpdatePerson(id, person);
+        _personService.Update(id, person);
     }
     
     
-    // Delete person
-    public void DeletePerson()
+    public void Delete()
     {
         Console.WriteLine("Enter person id:");
         var id = int.Parse(Console.ReadLine());
-        _personService.DeletePerson(id);
+        _personService.Delete(id);
     }
 }

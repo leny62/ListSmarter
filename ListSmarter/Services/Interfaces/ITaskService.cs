@@ -7,10 +7,10 @@ namespace ListSmarter.Services
 {
     public interface ITaskService
     {
-        TaskDto GetTaskById(int id);
-        TaskDto CreateTask(TaskDto taskDto);
-        TaskDto UpdateTask(int id, TaskDto task);
-        TaskDto DeleteTask(int id);
+        TaskDto GetById(int id);
+        TaskDto Create(TaskDto taskDto);
+        TaskDto Update(int id, TaskDto task);
+        TaskDto Delete(int id);
         IList<TaskDto> GetAll();
         TaskDto AssignTaskToPerson (int taskId, int personId);
         TaskDto AssignTaskToBucket(int taskId, int bucket);

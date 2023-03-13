@@ -1,10 +1,6 @@
 using FluentValidation;
-using ListSmarter.Repositories.Models;
 using ListSmarter.Services;
 using ListSmarter.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ListSmarter.ConsoleUI.Controllers;
 
@@ -23,7 +19,7 @@ public class BucketController
         _taskValidator = taskValidator;
     }
     
-    public void CreateBucket()
+    public void Create()
     {
         Console.WriteLine("Enter bucket name:");
         var title = Console.ReadLine();
@@ -33,11 +29,10 @@ public class BucketController
             Title = title
         };
         _bucketValidator.ValidateAndThrow(bucket);
-        _bucketService.CreateBucket(bucket);
+        _bucketService.Create(bucket);
     }
     
-    // Get all buckets
-    public void GetAllBuckets()
+    public void GetAll()
     {
         var buckets = _bucketService.GetAll();
         foreach (var bucket in buckets)
@@ -46,8 +41,7 @@ public class BucketController
         }
     }
     
-    // Get Bucket by Id
-    public void GetBucketById()
+    public void GetById()
     {
         Console.WriteLine("Enter bucket id:");
         var id = int.Parse(Console.ReadLine());
@@ -55,8 +49,7 @@ public class BucketController
         Console.WriteLine($"Id: {bucket.Id}, Title: {bucket.Title}");
     }
     
-    // Update bucket
-    public void UpdateBucket()
+    public void Update()
     {
         Console.WriteLine("Enter bucket id:");
         var id = int.Parse(Console.ReadLine());
@@ -68,16 +61,14 @@ public class BucketController
             Title = title
         };
         _bucketValidator.ValidateAndThrow(bucket);
-        _bucketService.UpdateBucket(id, bucket);
+        _bucketService.Update(id, bucket);
     }
     
-    // Delete bucket
-    
-    public void DeleteBucket()
+    public void Delete()
     {
         Console.WriteLine("Enter bucket id:");
         var id = int.Parse(Console.ReadLine());
-        _bucketService.DeleteBucket(id);
+        _bucketService.Delete(id);
     }
     
 }

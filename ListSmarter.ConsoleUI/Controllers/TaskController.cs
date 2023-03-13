@@ -45,10 +45,9 @@ public class TaskController
             Status = (Status) System.Enum.Parse(typeof(Status), status)
         };
         _taskValidator.ValidateAndThrow(task);
-        _taskService.CreateTask(task);
+        _taskService.Create(task);
     }
     
-    // Get all tasks
     public void GetAllTasks()
     {
         var tasks = _taskService.GetAll();
@@ -58,16 +57,14 @@ public class TaskController
         }
     }
     
-    // Get Task by Id
     public void GetTaskById()
     {
         Console.WriteLine("Enter task id:");
         var id = int.Parse(Console.ReadLine());
-        var task = _taskService.GetTaskById(id);
+        var task = _taskService.GetById(id);
         Console.WriteLine($"Id: {task.Id}, Title: {task.Title}, Description: {task.Description}, Status: {task.Status}");
     }
     
-    // Update task
     public void UpdateTask()
     {
         Console.WriteLine("Enter task id:");
@@ -90,18 +87,16 @@ public class TaskController
             Status = (Status) System.Enum.Parse(typeof(Status), status)
         };
         _taskValidator.ValidateAndThrow(task);
-        _taskService.UpdateTask(id, task);
+        _taskService.Update(id, task);
     }
     
-    // Delete task
     public void DeleteTask()
     {
         Console.WriteLine("Enter task id:");
         var id = int.Parse(Console.ReadLine());
-        _taskService.DeleteTask(id);
+        _taskService.Delete(id);
     }
     
-    // Assign task to person
     public void AssignTaskToPerson()
     {
         Console.WriteLine("Enter task id:");
@@ -111,7 +106,6 @@ public class TaskController
         _taskService.AssignTaskToPerson(taskId, personId);
     }
     
-    // Assign task to bucket
     public void AssignTaskToBucket()
     {
         Console.WriteLine("Enter task id:");
@@ -121,7 +115,6 @@ public class TaskController
         _taskService.AssignTaskToBucket(taskId, bucketId);
     }
     
-    // Change task status
     public void ChangeTaskStatus()
     {
         Console.WriteLine("Enter task id:");
@@ -131,24 +124,22 @@ public class TaskController
         _taskService.ChangeTaskStatus(taskId, status);
     }
     
-    // Get all tasks by for person
     public void GetAllTasksForPerson()
     {
         Console.WriteLine("Enter person id:");
         var personId = int.Parse(Console.ReadLine());
-        var tasks = _taskService.GetAll().Where(t => t.Assignee.Id == personId);
+        var tasks = _taskService.GetAll().Where(t => t.Assignee == personId);
         foreach (var task in tasks)
         {
             Console.WriteLine($"Id: {task.Id}, Title: {task.Title}, Description: {task.Description}, Status: {task.Status}");
         }
     }
     
-    // Get all tasks by for bucket
     public void GetAllTasksForBucket()
     {
         Console.WriteLine("Enter bucket id:");
         var bucketId = int.Parse(Console.ReadLine());
-        var tasks = _taskService.GetAll().Where(t => t.Bucket.Id == bucketId);
+        var tasks = _taskService.GetAll().Where(t => t.Bucket == bucketId);
         foreach (var task in tasks)
         {
             Console.WriteLine($"Id: {task.Id}, Title: {task.Title}, Description: {task.Description}, Status: {task.Status}");

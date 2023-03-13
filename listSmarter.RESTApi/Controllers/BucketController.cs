@@ -15,14 +15,12 @@ namespace listSmarter.RESTApi.Controllers
             _bucketService = bucketService;
         }
         
-        // Get all Buckets
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BucketDto>>> GetAll()
         {
             return await Task.FromResult(Ok(_bucketService.GetAll().ToList()));
         }
         
-        // Get a Bucket by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -36,13 +34,12 @@ namespace listSmarter.RESTApi.Controllers
             }
         }
         
-        // Create a Bucket
         [HttpPost]
         public async Task<ActionResult<BucketDto>> CreateBucket(BucketDto bucketDto)
         {
             try 
             {
-                BucketDto bucket = _bucketService.CreateBucket(bucketDto);
+                BucketDto bucket = _bucketService.Create(bucketDto);
                 return await Task.FromResult(CreatedAtAction(nameof(GetById), new { id = bucket.Id }, bucket));
             }
             catch (ValidationException e)
@@ -51,13 +48,12 @@ namespace listSmarter.RESTApi.Controllers
             }
         }
         
-        // Update a Bucket
         [HttpPut]
         public async Task<IActionResult> UpdateBucket(int id, [FromBody] BucketDto bucketDto)
         {
             try 
             {
-                _bucketService.UpdateBucket(id, bucketDto);
+                _bucketService.Update(id, bucketDto);
                 return await Task.FromResult(Ok());
             }
             catch (KeyNotFoundException)
@@ -70,13 +66,12 @@ namespace listSmarter.RESTApi.Controllers
             }
         }
         
-        // Delete a Bucket
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBucket(int id)
         {
             try 
             {
-                _bucketService.DeleteBucket(id);
+                _bucketService.Delete(id);
                 return await Task.FromResult(Ok());
             }
             catch (KeyNotFoundException)

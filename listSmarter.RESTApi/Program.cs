@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using ListSmarter;
-using AutoMapper.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +16,9 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new() { Title = "ListSmarter.RESTApi", Version = "v1" });
 });
 
-// Add AutoMapper configuration
+// AutoMapper configuration
 builder.Services.AddAutoMapper((config) => { }, AppDomain.CurrentDomain.GetAssemblies());
+
 // Modify JsonSerializerOptions to include ReferenceHandler.Preserve
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -27,7 +27,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 var app = builder.Build();
 
-// configure the HTTP request pipeline
+// HTTP request pipeline configuration
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

@@ -90,34 +90,34 @@ namespace ListSmarter.ConsoleUI
                 switch (choice)
                 {
                     case "1":
-                        personController.GetAllPeople();
+                        personController.GetAll();
                         break;
                     case "2":
-                        personController.CreatePerson();
+                        personController.Create();
                         break;
                     case "3":
-                        personController.GetPersonById();
+                        personController.GetById();
                         break;
                     case "4":
-                        personController.UpdatePerson();
+                        personController.Update();
                         break;
                     case "5":
-                        personController.DeletePerson();
+                        personController.Delete();
                         break;
                     case "6":
-                        bucketController.CreateBucket();
+                        bucketController.Create();
                         break;
                     case "7":
-                        bucketController.GetAllBuckets();
+                        bucketController.GetAll();
                         break;
                     case "8":
-                        bucketController.GetBucketById();
+                        bucketController.GetById();
                         break;
                     case "9":
-                        bucketController.UpdateBucket();
+                        bucketController.Update();
                         break;
                     case "10":
-                        bucketController.DeleteBucket();
+                        bucketController.Delete();
                         break;
                     case "11":
                         taskController.CreateTask();

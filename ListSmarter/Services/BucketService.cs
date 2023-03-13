@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using AutoMapper;
 using FluentValidation;
 using ListSmarter.Models;
 using ListSmarter.Repositories;
-using ListSmarter.Repositories.Models;
-using ListSmarter.Common;
 
 namespace ListSmarter.Services
 {
@@ -35,7 +30,7 @@ namespace ListSmarter.Services
 
      
 
-        public BucketDto CreateBucket(BucketDto bucketDto)
+        public BucketDto Create(BucketDto bucketDto)
         {
             _bucketValidator.ValidateAndThrow(bucketDto);
             var titleTaken = _bucketRepository.GetAll().Any(b => b.Title == bucketDto.Title);
@@ -46,7 +41,7 @@ namespace ListSmarter.Services
             return _bucketRepository.Create(bucketDto);
         }
 
-        public BucketDto UpdateBucket(int id, BucketDto bucketDto)
+        public BucketDto Update(int id, BucketDto bucketDto)
         {
             ValidateBucketId(id);
             if (bucketDto == null)
@@ -56,7 +51,7 @@ namespace ListSmarter.Services
             return _bucketRepository.Update(id, bucketDto);
         }
 
-        public BucketDto DeleteBucket(int id)
+        public BucketDto Delete(int id)
         {
             ValidateBucketId(id);
             return _bucketRepository.Delete(id);

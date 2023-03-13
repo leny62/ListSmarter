@@ -7,8 +7,8 @@ namespace ListSmarter.Services
     {
         IList<BucketDto> GetAll();
         BucketDto GetById(int id);
-        BucketDto CreateBucket(BucketDto bucketDto);
-        BucketDto UpdateBucket(int id, BucketDto bucketDto);
-        BucketDto DeleteBucket(int id);
+        BucketDto Create(BucketDto bucketDto);
+        BucketDto Update(int id, BucketDto bucketDto);
+        BucketDto Delete(int id);
     }
 }

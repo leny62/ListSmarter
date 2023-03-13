@@ -1,15 +1,7 @@
-using AutoMapper;
 using ListSmarter.Models;
 using ListSmarter.Repositories;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using FluentValidation;
 using ListSmarter.Enums;
-using ListSmarter.Repositories.Models;
-using Task = ListSmarter.Repositories.Models.Task;
 
 namespace ListSmarter.Services
 {
@@ -24,26 +16,26 @@ namespace ListSmarter.Services
             _taskValidator = taskValidator;
         }
         
-        public TaskDto GetTaskById(int id)
+        public TaskDto GetById(int id)
         {
             ValidateTaskId(id);
             return _taskRepository.GetTaskById(id);
         }
         
-        public TaskDto CreateTask(TaskDto task)
+        public TaskDto Create(TaskDto task)
         {
             _taskValidator.ValidateAndThrow(task);
             return _taskRepository.Create(task);
         }
         
-        public TaskDto UpdateTask(int id, TaskDto task)
+        public TaskDto Update(int id, TaskDto task)
         {
             ValidateTaskId(id);
             _taskValidator.ValidateAndThrow(task);
             return _taskRepository.Update(id, task);
         }
         
-        public TaskDto DeleteTask(int id)
+        public TaskDto Delete(int id)
         {
             ValidateTaskId(id);
             return _taskRepository.Delete(id);

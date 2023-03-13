@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace listSmarter.RESTApi.Controllers;
 
-
+[Route("api/v1/tasks")]
 [ApiController]
-[Route("[controller]")]
 public class TasksController : ControllerBase
 {
     private ITaskService _taskService;
@@ -17,20 +16,18 @@ public class TasksController : ControllerBase
         _taskService = taskService;
     }
     
-    // Get all Tasks
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TaskDto>>> GetAll()
     {
         return await Task.FromResult(Ok(_taskService.GetAll().ToList()));
     }
     
-    // Get a Task by ID
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
         try 
         {
-            return await Task.FromResult(Ok(_taskService.GetTaskById(id)));
+            return await Task.FromResult(Ok(_taskService.GetById(id)));
         }
         catch (KeyNotFoundException)
         {
@@ -38,13 +35,12 @@ public class TasksController : ControllerBase
         }
     }
     
-    // Create a Task
     [HttpPost]
-    public async Task<ActionResult<TaskDto>> CreateTask(TaskDto taskDto)
+    public async Task<ActionResult<TaskDto>> Create(TaskDto taskDto)
     {
         try 
         {
-            TaskDto task = _taskService.CreateTask(taskDto);
+            TaskDto task = _taskService.Create(taskDto);
             return await Task.FromResult(CreatedAtAction(nameof(GetById), new { id = task.Id }, task));
         }
         catch (ValidationException e)
@@ -53,13 +49,12 @@ public class TasksController : ControllerBase
         }
     }
     
-    // Update a Task
     [HttpPut]
-    public async Task<IActionResult> UpdateTask([FromRoute] int id, [FromBody] TaskDto taskDto)
+    public async Task<ActionResult> UpdateTask([FromRoute] int id, [FromBody] TaskDto taskDto)
     {
         try 
         {
-            _taskService.UpdateTask(id, taskDto);
+            _taskService.Update(id, taskDto);
             return await Task.FromResult(Ok());
         }
         catch (KeyNotFoundException)
@@ -72,13 +67,12 @@ public class TasksController : ControllerBase
         }
     }
     
-    // Delete a Task
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTask(int id)
+    public async Task<ActionResult> DeleteTask(int id)
     {
         try 
         {
-            _taskService.DeleteTask(id);
+            _taskService.Delete(id);
             return await Task.FromResult(Ok());
         }
         catch (KeyNotFoundException)
@@ -87,7 +81,6 @@ public class TasksController : ControllerBase
         }
     }
     
-    // Assign a Task to a Person
     [HttpPost("{taskId}/assignToPerson/{personId}")]
     public async Task<IActionResult> AssignTaskToPerson(int taskId, int personId)
     {
@@ -106,7 +99,6 @@ public class TasksController : ControllerBase
         }
     }
     
-    // Assign a Task to a Bucket
     [HttpPost("{taskId}/assignToBucket/{bucketId}")]
     public async Task<IActionResult> AssignTaskToBucket(int taskId, int bucketId)
     {
@@ -125,7 +117,6 @@ public class TasksController : ControllerBase
         }
     }
     
-    // Change the status of a Task
     [HttpPost("{taskId}/changeStatus/{status}")]
     public async Task<IActionResult> ChangeTaskStatus(int taskId, string taskStatus)
     {

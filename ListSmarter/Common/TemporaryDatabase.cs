@@ -1,9 +1,4 @@
 using TaskModel = ListSmarter.Repositories.Models.Task;
-using TaskDto = ListSmarter.Models.TaskDto;
-using ListSmarter.Repositories;
-using ListSmarter.Services;
-using ListSmarter.Models;
-using ListSmarter.Models.Validators;
 using ListSmarter.Repositories.Models;
 using ListSmarter.Enums;
 
@@ -11,44 +6,38 @@ namespace ListSmarter.Common
 {
     public static class TemporaryDatabase
     {
-        public static List<Bucket> Buckets { get; set; } = new List<Bucket>();
-        public static List<Person> People { get; set; } = new List<Person>();
-        public static List<TaskModel> Tasks { get; set; } = new List<TaskModel>();
-
-        static TemporaryDatabase()
-        {
-            CreateData();
-        }
-
-        public static void CreateData()
-        {
-            for (int i = 0; i < 10; i++)
+       static Bucket TasksBucket = new BucketBuilder()
+          .WithId(1)
+          .WithTitle("The First Bucket")
+          .Build();
+       static Person LenyIhirwe = new PersonBuilder()
+          .WithId(1)
+          .WithFirstName("Leny Pascal")
+          .WithLastName("Ihirwe")
+          .Build();
+       static TaskModel CodingTask = new TaskBuilder()
+          .WithId(1)
+          .WithTitle("Coding")
+          .WithDescription("Coding is fun")
+          .WithBucketId(1)
+          .WithStatus(Status.InProgress)
+          .WithAssigneeId(1)
+          .Build();
+       
+         public static List<Bucket> Buckets = new List<Bucket>
+         {
+             TasksBucket
+         };
+         
+            public static List<Person> People = new List<Person>
             {
-                Bucket bucket = new()
-                {
-                    Id = i,
-                    Title = $"Bucket {i}",
-                };
-                Buckets.Add(bucket);
-                
-                Person person = new()
-                {
-                    Id = i,
-                    FirstName = $"Person {i}" + "First" + i,
-                    LastName = $"Person {i}" + "Last" + i,
-                };
-                People.Add(person);
-                
-                TaskModel task = new()
-                {
-                    Id = i,
-                    Title = $"Task {i}",
-                    Description = $"Task number {i}",
-                    Status = (Status) System.Enum.Parse(typeof(Status), "Open"),
-                };
-                Tasks.Add(task);
-            }
-        }
+                LenyIhirwe
+            };
+            
+               public static List<TaskModel> Tasks = new List<TaskModel>
+               {
+                   CodingTask
+               };
     }
 }
 
