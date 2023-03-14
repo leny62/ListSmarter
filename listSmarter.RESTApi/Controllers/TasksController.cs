@@ -50,7 +50,7 @@ public class TasksController : ControllerBase
     }
     
     [HttpPut]
-    public async Task<ActionResult> UpdateTask([FromRoute] int id, [FromBody] TaskDto taskDto)
+    public async Task<ActionResult> Update([FromRoute] int id, [FromBody] TaskDto taskDto)
     {
         try 
         {
@@ -68,7 +68,7 @@ public class TasksController : ControllerBase
     }
     
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteTask(int id)
+    public async Task<ActionResult> Delete(int id)
     {
         try 
         {
@@ -81,22 +81,28 @@ public class TasksController : ControllerBase
         }
     }
     
-    [HttpPost("{taskId}/assignToPerson/{personId}")]
-    public async Task<IActionResult> AssignTaskToPerson(int taskId, int personId)
+    [HttpPost("{taskId}/assignment")]
+    public async Task<IActionResult> AssignTaskToPerson([FromBody] AssignmenttRequest assignmentRequest)
     {
         try 
         {
-            _taskService.AssignTaskToPerson(taskId, personId);
+            _taskService.AssignTaskToPerson(assignmentRequest.TaskId, assignmentRequest.PersonId);
             return await Task.FromResult(Ok());
         }
         catch (KeyNotFoundException)
         {
-            return StatusCode(404, "Task with ID " + taskId + " not found");
+            return StatusCode(404, "Task with ID " + assignmentRequest.TaskId + " not found");
         }
         catch (ValidationException e)
         {
             return BadRequest(e.Message);
         }
+    }
+    
+    public class AssignmenttRequest
+    {
+        public int TaskId { get; set; }
+        public int PersonId { get; set; }
     }
     
     [HttpPost("{taskId}/assignToBucket/{bucketId}")]
