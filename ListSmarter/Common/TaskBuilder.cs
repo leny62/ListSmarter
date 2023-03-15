@@ -1,5 +1,5 @@
-using ListSmarter.Enums;
 using ListSmarter.Repositories.Models;
+using ListSmarter.Repositories.Models.Enums;
 using Task = ListSmarter.Repositories.Models.Task;
 
 namespace ListSmarter.Common;
@@ -56,15 +56,9 @@ public class TaskBuilder
             Id = _id,
             Title = _title,
             Description = _description,
-            Bucket = new Repositories.Models.Bucket()
-            {
-                Id = _bucketId
-            },
+            Bucket = _bucketId,
             Status = _status,
-            Assignee = new Repositories.Models.Person()
-            {
-                Id = _assigneeId
-            }
+            Assignee = _assigneeId
         };
     }
 }

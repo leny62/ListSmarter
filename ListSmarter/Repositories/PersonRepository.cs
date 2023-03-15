@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using ListSmarter.Models;
 using ListSmarter.Repositories.Models;
 using ListSmarter.Common;
+using ListSmarter.DTOs;
+using ListSmarter.Services.Interfaces;
 
 namespace ListSmarter.Repositories
 {
     public class PersonRepository : IPersonRepository
     {
         private readonly IMapper _mapper;
-        private List<Person> _persons;
+        private List<Person?> _persons;
 
         public PersonRepository(IMapper mapper)
         {
@@ -48,7 +49,7 @@ namespace ListSmarter.Repositories
 
         public PersonDto Delete(int id)
         {
-            Person personToDelete = _persons.FirstOrDefault(p => p.Id == id);
+            Person? personToDelete = _persons.FirstOrDefault(p => p.Id == id);
             if (personToDelete == null)
             {
                 return null;

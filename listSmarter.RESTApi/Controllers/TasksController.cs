@@ -1,5 +1,5 @@
 using FluentValidation;
-using ListSmarter.Models;
+using ListSmarter.DTOs;
 using ListSmarter.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -81,17 +81,17 @@ public class TasksController : ControllerBase
         }
     }
     
-    [HttpPost("{taskId}/assignment")]
-    public async Task<IActionResult> AssignTaskToPerson([FromBody] AssignmenttRequest assignmentRequest)
+    [HttpPost("{taskId}/assign-to-person")]
+    public async Task<ActionResult> AssignTaskToPerson(int taskId, int personId)
     {
         try 
         {
-            _taskService.AssignTaskToPerson(assignmentRequest.TaskId, assignmentRequest.PersonId);
-            return await Task.FromResult(Ok());
+            _taskService.AssignTaskToPerson(taskId, personId);
+            return Ok();
         }
         catch (KeyNotFoundException)
         {
-            return StatusCode(404, "Task with ID " + assignmentRequest.TaskId + " not found");
+            return NotFound($"Task with ID {taskId} not found");
         }
         catch (ValidationException e)
         {
@@ -99,31 +99,25 @@ public class TasksController : ControllerBase
         }
     }
     
-    public class AssignmenttRequest
+    [HttpPost("{taskId}/assign-to-bucket")]
+    public async Task<ActionResult> AssignTaskToBucket(int taskId, int bucketId)
     {
-        public int TaskId { get; set; }
-        public int PersonId { get; set; }
-    }
-    
-    [HttpPost("{taskId}/assignToBucket/{bucketId}")]
-    public async Task<IActionResult> AssignTaskToBucket(int taskId, int bucketId)
-    {
-        try 
+        try
         {
             _taskService.AssignTaskToBucket(taskId, bucketId);
-            return await Task.FromResult(Ok());
+            return Ok();
         }
         catch (KeyNotFoundException)
         {
-            return StatusCode(404, "Task with ID " + taskId + " not found");
+            return NotFound($"Task with ID {taskId} not found");
         }
         catch (ValidationException e)
         {
             return BadRequest(e.Message);
         }
     }
-    
-    [HttpPost("{taskId}/changeStatus/{status}")]
+
+    [HttpPost("{taskId}/changeStatus")]
     public async Task<IActionResult> ChangeTaskStatus(int taskId, string taskStatus)
     {
         try 

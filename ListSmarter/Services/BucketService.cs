@@ -1,7 +1,8 @@
 using System.Data;
 using FluentValidation;
-using ListSmarter.Models;
+using ListSmarter.DTOs;
 using ListSmarter.Repositories;
+using ListSmarter.Services.Interfaces;
 
 namespace ListSmarter.Services
 {
@@ -28,8 +29,6 @@ namespace ListSmarter.Services
             return _bucketRepository.GetById(id);
         }
 
-     
-
         public BucketDto Create(BucketDto bucketDto)
         {
             _bucketValidator.ValidateAndThrow(bucketDto);
@@ -44,6 +43,11 @@ namespace ListSmarter.Services
         public BucketDto Update(int id, BucketDto bucketDto)
         {
             ValidateBucketId(id);
+            var titleTaken = _bucketRepository.GetAll().Any(b => b.Title == bucketDto.Title);
+            if (titleTaken)
+            {
+                throw new DuplicateNameException($"Bucket with title {bucketDto.Title} already exists");
+            }
             if (bucketDto == null)
             {
                 throw new ArgumentNullException(nameof(bucketDto));
@@ -54,6 +58,11 @@ namespace ListSmarter.Services
         public BucketDto Delete(int id)
         {
             ValidateBucketId(id);
+            var bucket = _bucketRepository.GetById(id);
+            if (bucket.Tasks.Count > 0)
+            {
+                throw new DataException($"Bucket {bucket.Title} has tasks and cannot be deleted");
+            }
             return _bucketRepository.Delete(id);
         }
         

@@ -3,9 +3,10 @@ using System.Data;
 using System.Linq;
 using AutoMapper;
 using ListSmarter.Common;
-using ListSmarter.Models;
+using ListSmarter.DTOs;
 using ListSmarter.Repositories.Models;
-using static ListSmarter.Models.BucketDto;
+using ListSmarter.Services.Interfaces;
+using static ListSmarter.DTOs.BucketDto;
 
 namespace ListSmarter.Repositories
 {

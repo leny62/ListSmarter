@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using ListSmarter.Enums;
-using ListSmarter.Models;
-using ListSmarter.Repositories.Models;
+using ListSmarter.DTOs;
 using Task = ListSmarter.Repositories.Models.Task;
 
-namespace ListSmarter.Repositories
+namespace ListSmarter.Services.Interfaces
 {
     public interface ITaskRepository
     {

@@ -1,28 +1,11 @@
 ﻿using ListSmarter.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
 using FluentValidation;
-using ListSmarter.ConsoleUI.Controllers;
-using ListSmarter.Models;
 using ListSmarter.Repositories;
-using ListSmarter.Repositories.Models;
-using ListSmarter.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Task = ListSmarter.Repositories.Models.Task;
-using ListSmarter.ConsoleUI.Controllers;
-using ListSmarter.Models.Validators;
-using AutoMapper;
+using ListSmarter.DTOs;
+using ListSmarter.DTOs.Validators;
+using listSmarter.RESTApi.Controllers;
+using ListSmarter.Services.Interfaces;
 
 namespace ListSmarter.ConsoleUI
 {
@@ -50,14 +33,11 @@ namespace ListSmarter.ConsoleUI
         
         static void Main(string[] args)
         {
+            // configure controllers from ListSmarter.RestApi   
             var serviceProvider = CreateServiceProvider();
-            var personService = serviceProvider.GetService<IPersonService>();
-            var personController = new PersonController(personService, serviceProvider.GetService<ITaskService>(), serviceProvider.GetService<IValidator<PersonDto>>(), serviceProvider.GetService<IValidator<TaskDto>>());
-            var bucketService = serviceProvider.GetService<IBucketService>();
-            var bucketController = new BucketController(bucketService, serviceProvider.GetService<ITaskService>(), serviceProvider.GetService<IValidator<BucketDto>>(), serviceProvider.GetService<IValidator<TaskDto>>());
-            
-            var taskService = serviceProvider.GetService<ITaskService>();
-            var taskController = new TaskController(taskService, serviceProvider.GetService<IBucketService>(), serviceProvider.GetService<IPersonService>(), serviceProvider.GetService<IValidator<TaskDto>>());
+            var personController = serviceProvider.GetService<PersonController>();
+            var bucketController = serviceProvider.GetService<BucketController>();
+            var taskController = serviceProvider.GetService<TasksController>();
 
             while (true)
             {
@@ -93,62 +73,73 @@ namespace ListSmarter.ConsoleUI
                         personController.GetAll();
                         break;
                     case "2":
-                        personController.Create();
+                        Console.WriteLine("Enter the First Name: ");
+                        var firstName = Console.ReadLine();
+                        Console.WriteLine("Enter the Last Name: ");
+                        var lastName = Console.ReadLine();
+                        PersonDto personDto = new PersonDto
+                        {
+                            FirstName = firstName,
+                            LastName = lastName
+                        };
+                        personController.Create(personDto);
                         break;
                     case "3":
-                        personController.GetById();
+                        Console.WriteLine("Enter the Id: ");
+                        var id = Console.ReadLine();
+                        personController.GetById(Int32.Parse(id));
                         break;
-                    case "4":
-                        personController.Update();
-                        break;
-                    case "5":
-                        personController.Delete();
-                        break;
-                    case "6":
-                        bucketController.Create();
-                        break;
-                    case "7":
-                        bucketController.GetAll();
-                        break;
-                    case "8":
-                        bucketController.GetById();
-                        break;
-                    case "9":
-                        bucketController.Update();
-                        break;
-                    case "10":
-                        bucketController.Delete();
-                        break;
-                    case "11":
-                        taskController.CreateTask();
-                        break;
-                    case "12":
-                        taskController.GetAllTasks();
-                        break;
-                    case "13":
-                        taskController.GetTaskById();
-                        break;
-                    case "14":
-                        taskController.UpdateTask();
-                        break;
-                    case "15":
-                        taskController.DeleteTask();
-                        break;
-                    case "16":
-                        taskController.AssignTaskToPerson();
-                        break;
-                    case "17":
-                        taskController.AssignTaskToBucket();
-                        break;
-                    case "18":
-                        taskController.ChangeTaskStatus();
-                        break;
-                    case "19":
-                        taskController.GetAllTasksForPerson();
-                        break;
-                    case "20":
-                        taskController.GetAllTasksForBucket();
-                        break;
+                    // case "4":
+                    //     personController.Update();
+                    //     break;
+                    // case "5":
+                    //     personController.Delete();
+                    //     break;
+                    // case "6":
+                    //     bucketController.Create();
+                    //     break;
+                    // case "7":
+                    //     bucketController.GetAll();
+                    //     break;
+                    // case "8":
+                    //     bucketController.GetById();
+                    //     break;
+                    // case "9":
+                    //     bucketController.Update();
+                    //     break;
+                    // case "10":
+                    //     bucketController.Delete();
+                    //     break;
+                    // case "11":
+                    //     taskController.CreateTask();
+                    //     break;
+                    // case "12":
+                    //     taskController.GetAllTasks();
+                    //     break;
+                    // case "13":
+                    //     taskController.GetTaskById();
+                    //     break;
+                    // case "14":
+                    //     taskController.UpdateTask();
+                    //     break;
+                    // case "15":
+                    //     taskController.DeleteTask();
+                    //     break;
+                    // case "16":
+                    //     taskController.AssignTaskToPerson();
+                    //     break;
+                    // case "17":
+                    //     taskController.AssignTaskToBucket();
+                    //     break;
+                    // case "18":
+                    //     taskController.ChangeTaskStatus();
+                    //     break;
+                    // case "19":
+                    //     taskController.GetAllTasksForPerson();
+                    //     break;
+                    // case "20":
+                    //     taskController.GetAllTasksForBucket();
+                    //     break;
                     default:
                         Console.WriteLine("Invalid choice");
                         break;

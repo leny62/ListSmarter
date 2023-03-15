@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace ListSmarter.Models
+namespace ListSmarter.DTOs
 {
     public class BucketDto
     {

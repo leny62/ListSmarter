@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ListSmarter.Enums;
-using ListSmarter.Models;
+using ListSmarter.Repositories.Models.Enums;
 
 namespace ListSmarter.Repositories.Models
 {
@@ -14,7 +8,7 @@ namespace ListSmarter.Repositories.Models
        public string Title { get; set; }
        public  string Description { get; set; }
        public Status Status { get; set; }
-       public Person? Assignee { get; set; }
-       public Bucket? Bucket { get; set; }
+       public int Assignee { get; set; }
+       public int? Bucket { get; set; }
     }
 }

@@ -1,7 +1,8 @@
-using ListSmarter.Models;
 using ListSmarter.Repositories;
 using FluentValidation;
-using ListSmarter.Enums;
+using ListSmarter.DTOs;
+using ListSmarter.Repositories.Models.Enums;
+using ListSmarter.Services.Interfaces;
 
 namespace ListSmarter.Services
 {
@@ -64,7 +65,7 @@ namespace ListSmarter.Services
             ValidateTaskId(taskId);
             TaskDto task = _taskRepository.GetTaskById(taskId);
             task = new TaskDto
-            {
+        {
                 Id = task.Id,
                 Title = task.Title,
                 Bucket = bucketId

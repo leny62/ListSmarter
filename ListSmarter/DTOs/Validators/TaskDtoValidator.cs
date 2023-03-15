@@ -1,7 +1,6 @@
 using FluentValidation;
-using ListSmarter.Models;
 
-namespace ListSmarter.Models.Validators
+namespace ListSmarter.DTOs.Validators
 {
     public class TaskDtoValidator : AbstractValidator<TaskDto>
 

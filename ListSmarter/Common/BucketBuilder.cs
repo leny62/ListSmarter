@@ -1,4 +1,3 @@
-using ListSmarter.Models;
 using ListSmarter.Repositories.Models;
 using Task = System.Threading.Tasks.Task;
 

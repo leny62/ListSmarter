@@ -1,5 +1,5 @@
 using FluentValidation;
-using ListSmarter.Models;
+using ListSmarter.DTOs;
 using ListSmarter.Repositories.Models;
 using ListSmarter.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +40,7 @@ namespace listSmarter.RESTApi.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<PersonDto>> CreatePerson(PersonDto personDto)
+        public async Task<ActionResult<PersonDto>> Create(PersonDto personDto)
         {
             try 
             {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using ListSmarter.Enums;
-using ListSmarter.Models;
 using ListSmarter.Repositories.Models;
 using Task = ListSmarter.Repositories.Models.Task;
 using ListSmarter.Common;
+using ListSmarter.DTOs;
+using ListSmarter.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using TaskModel = ListSmarter.Repositories.Models.Task;
 
@@ -14,9 +14,9 @@ namespace ListSmarter.Repositories
     public class TaskRepository : ITaskRepository
     {
         private readonly IMapper _mapper;
-        private List<Task> _tasks;
+        private List<Task?> _tasks;
         private List<Bucket> _buckets;
-        private List<Person> _people;
+        private List<Person?> _people;
 
         public TaskRepository(IMapper mapper)
         {
@@ -34,7 +34,7 @@ namespace ListSmarter.Repositories
 
         public TaskDto GetTaskById(int id)
         {
-            Task task = _tasks.FirstOrDefault(t => t.Id == id);
+            Task? task = _tasks.FirstOrDefault(t => t!.Id == id);
             if (task == null)
             {
                 return null;
@@ -44,7 +44,7 @@ namespace ListSmarter.Repositories
 
         public TaskDto Create(TaskDto task)
         {
-            Task taskToCreate = _mapper.Map<Task>(task);
+            Task? taskToCreate = _mapper.Map<Task>(task);
             taskToCreate.Id = _tasks.Any() ? _tasks.Max(t => t.Id) + 1 : 1;
             _tasks.Add(taskToCreate);
             return _mapper.Map<TaskDto>(taskToCreate);
@@ -60,48 +60,33 @@ namespace ListSmarter.Repositories
             taskToUpdate.Title = task.Title;
             taskToUpdate.Description = task.Description;
             taskToUpdate.Status = task.Status;
-            
-            var assignee = _people.FirstOrDefault(person => person.Id == taskToUpdate?.Assignee?.Id);
-            if (assignee != null)
+
+            if (task.Assignee.HasValue)
             {
-                taskToUpdate.Assignee = assignee;
-                assignee.Tasks.Add(taskToUpdate);
+                taskToUpdate.Assignee = (int)task.Assignee;
+                Person? person = _people.FirstOrDefault(p => p.Id == task.Assignee);
+                if (person != null)
+                {
+                    person.Tasks.Add(taskToUpdate);
+                }
             }
             
-            var bucket = _buckets.FirstOrDefault(b => b.Id == taskToUpdate?.Bucket?.Id);
-            if (bucket != null)
+            if (task.Bucket.HasValue)
             {
-                taskToUpdate.Bucket = bucket;
-                bucket.Tasks.Add(taskToUpdate);
+                taskToUpdate.Bucket = (int)task.Bucket;
+                Bucket? bucket = _buckets.FirstOrDefault(b => b.Id == task.Bucket);
+                if (bucket != null)
+                {
+                    bucket.Tasks.Add(taskToUpdate);
+                }
             }
-            
+
             return _mapper.Map<TaskDto>(taskToUpdate);
         }
         
-        public TaskDto AssignTaskToPerson(int taskId, int personId)
-        {
-            var task = _tasks.FirstOrDefault(t => t.Id == taskId);
-            if (task == null)
-            {
-                return null;
-            }
-            var person = _people.FirstOrDefault(p => p.Id == personId);
-            if (person == null)
-            {
-                return null;
-            }
-            if (task.Assignee != null)
-            {
-                task.Assignee.Tasks.Add(task);
-            }
-
-            task.Assignee = person;
-            person.Tasks.Add(task);
-            return _mapper.Map<TaskDto>(task);
-        }
         public TaskDto Delete(int id)
         {
-            Task task = _tasks.FirstOrDefault(t => t.Id == id);
+            Task? task = _tasks.FirstOrDefault(t => t.Id == id);
             if (task == null)
             {
                 return null;

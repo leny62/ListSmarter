@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using ListSmarter.Models;
-using ListSmarter.Repositories.Models;
+using ListSmarter.DTOs;
 
-namespace ListSmarter.Repositories
+namespace ListSmarter.Services.Interfaces
 {
     public interface IPersonRepository
     {

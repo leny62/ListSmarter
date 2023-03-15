@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\listSmarter.RESTApi\listSmarter.RESTApi.csproj" />
       <ProjectReference Include="..\ListSmarter\ListSmarter.csproj" />
     </ItemGroup>
 

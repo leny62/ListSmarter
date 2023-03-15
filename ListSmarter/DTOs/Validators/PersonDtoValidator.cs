@@ -1,7 +1,6 @@
 using FluentValidation;
-using FluentValidation.Results;
 
-namespace ListSmarter.Models.Validators
+namespace ListSmarter.DTOs.Validators
 {
     public class PersonDtoValidator : AbstractValidator<PersonDto>
     {

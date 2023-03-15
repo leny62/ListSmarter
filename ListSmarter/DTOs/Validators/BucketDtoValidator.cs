@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentValidation;
-using FluentValidation.Results;
 
-
-namespace ListSmarter.Models.Validators
+namespace ListSmarter.DTOs.Validators
 {
     public class BucketDtoValidator : AbstractValidator<BucketDto>
     {

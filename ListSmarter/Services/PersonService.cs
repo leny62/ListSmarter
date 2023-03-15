@@ -1,6 +1,7 @@
-using ListSmarter.Models;
 using ListSmarter.Repositories;
 using FluentValidation;
+using ListSmarter.DTOs;
+using ListSmarter.Services.Interfaces;
 
 namespace ListSmarter.Services
 {

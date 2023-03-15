@@ -1,5 +1,5 @@
 using FluentValidation;
-using ListSmarter.Models;
+using ListSmarter.DTOs;
 using ListSmarter.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +22,7 @@ namespace listSmarter.RESTApi.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult> GetById(int id)
         {
             try 
             {
@@ -35,7 +35,7 @@ namespace listSmarter.RESTApi.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<BucketDto>> CreateBucket(BucketDto bucketDto)
+        public async Task<ActionResult<BucketDto>> Create(BucketDto bucketDto)
         {
             try 
             {
@@ -49,7 +49,7 @@ namespace listSmarter.RESTApi.Controllers
         }
         
         [HttpPut]
-        public async Task<IActionResult> UpdateBucket(int id, [FromBody] BucketDto bucketDto)
+        public async Task<ActionResult> Update(int id, [FromBody] BucketDto bucketDto)
         {
             try 
             {
@@ -67,7 +67,7 @@ namespace listSmarter.RESTApi.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBucket(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try 
             {

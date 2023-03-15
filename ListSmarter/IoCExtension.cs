@@ -3,14 +3,15 @@ using ListSmarter.Common;
 using ListSmarter.Repositories;
 using ListSmarter.Repositories.Models;
 using ListSmarter.Services;
-using ListSmarter.Models;
-using ListSmarter.Models.Validators;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ListSmarter.DTOs;
+using ListSmarter.DTOs.Validators;
+using ListSmarter.Services.Interfaces;
 
 
 namespace ListSmarter;
