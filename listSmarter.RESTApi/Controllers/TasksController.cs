@@ -80,11 +80,11 @@ public class TasksController : ControllerBase
             return StatusCode(404, "Task with ID " + id + " not found");
         }
     }
-    
-    [HttpPost("{taskId}/assign-to-person")]
-    public async Task<ActionResult> AssignTaskToPerson(int taskId, int personId)
+
+    [HttpPost("{taskId}/people/{personId}")]
+    public async Task<ActionResult> AssignTaskToPerson([FromRoute] int taskId, [FromRoute] int personId)
     {
-        try 
+        try
         {
             _taskService.AssignTaskToPerson(taskId, personId);
             return Ok();
@@ -99,8 +99,8 @@ public class TasksController : ControllerBase
         }
     }
     
-    [HttpPost("{taskId}/assign-to-bucket")]
-    public async Task<ActionResult> AssignTaskToBucket(int taskId, int bucketId)
+    [HttpPost("{taskId}/buckets/{bucketId}")]
+    public async Task<ActionResult> AssignTaskToBucket([FromRoute] int taskId, [FromRoute] int bucketId)
     {
         try
         {
@@ -117,17 +117,17 @@ public class TasksController : ControllerBase
         }
     }
 
-    [HttpPost("{taskId}/changeStatus")]
-    public async Task<IActionResult> ChangeTaskStatus(int taskId, string taskStatus)
+    [HttpPost("{taskId}/status/{status}")]
+    public async Task<ActionResult> ChangeTaskStatus([FromRoute] int taskId, [FromRoute] string status)
     {
-        try 
+        try
         {
-            _taskService.ChangeTaskStatus(taskId, taskStatus);
-            return await Task.FromResult(Ok());
+            _taskService.ChangeTaskStatus(taskId, status);
+            return Ok();
         }
         catch (KeyNotFoundException)
         {
-            return StatusCode(404, "Task with ID " + taskId + " not found");
+            return NotFound($"Task with ID {taskId} not found");
         }
         catch (ValidationException e)
         {

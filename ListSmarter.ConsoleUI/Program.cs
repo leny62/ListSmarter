@@ -89,57 +89,57 @@ namespace ListSmarter.ConsoleUI
                         var id = Console.ReadLine();
                         personController.GetById(Int32.Parse(id));
                         break;
-                    // case "4":
-                    //     personController.Update();
-                    //     break;
-                    // case "5":
-                    //     personController.Delete();
-                    //     break;
-                    // case "6":
-                    //     bucketController.Create();
-                    //     break;
-                    // case "7":
-                    //     bucketController.GetAll();
-                    //     break;
-                    // case "8":
-                    //     bucketController.GetById();
-                    //     break;
-                    // case "9":
-                    //     bucketController.Update();
-                    //     break;
-                    // case "10":
-                    //     bucketController.Delete();
-                    //     break;
-                    // case "11":
-                    //     taskController.CreateTask();
-                    //     break;
-                    // case "12":
-                    //     taskController.GetAllTasks();
-                    //     break;
-                    // case "13":
-                    //     taskController.GetTaskById();
-                    //     break;
-                    // case "14":
-                    //     taskController.UpdateTask();
-                    //     break;
-                    // case "15":
-                    //     taskController.DeleteTask();
-                    //     break;
-                    // case "16":
-                    //     taskController.AssignTaskToPerson();
-                    //     break;
-                    // case "17":
-                    //     taskController.AssignTaskToBucket();
-                    //     break;
-                    // case "18":
-                    //     taskController.ChangeTaskStatus();
-                    //     break;
-                    // case "19":
-                    //     taskController.GetAllTasksForPerson();
-                    //     break;
-                    // case "20":
-                    //     taskController.GetAllTasksForBucket();
-                    //     break;
+                    case "4":
+                        personController.Update();
+                        break;
+                    case "5":
+                        personController.Delete();
+                        break;
+                    case "6":
+                        bucketController.Create();
+                        break;
+                    case "7":
+                        bucketController.GetAll();
+                        break;
+                    case "8":
+                        bucketController.GetById();
+                        break;
+                    case "9":
+                        bucketController.Update();
+                        break;
+                    case "10":
+                        bucketController.Delete();
+                        break;
+                    case "11":
+                        taskController.CreateTask();
+                        break;
+                    case "12":
+                        taskController.GetAllTasks();
+                        break;
+                    case "13":
+                        taskController.GetTaskById();
+                        break;
+                    case "14":
+                        taskController.UpdateTask();
+                        break;
+                    case "15":
+                        taskController.DeleteTask();
+                        break;
+                    case "16":
+                        taskController.AssignTaskToPerson();
+                        break;
+                    case "17":
+                        taskController.AssignTaskToBucket();
+                        break;
+                    case "18":
+                        taskController.ChangeTaskStatus();
+                        break;
+                    case "19":
+                        taskController.GetAllTasksForPerson();
+                        break;
+                    case "20":
+                        taskController.GetAllTasksForBucket();
+                        break;
                     default:
                         Console.WriteLine("Invalid choice");
                         break;
