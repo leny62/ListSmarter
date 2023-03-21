@@ -1,7 +1,10 @@
 using AutoMapper;
-using ListSmarter.DTOs;
-using ListSmarter.Repositories.Models;
-using Task = ListSmarter.Repositories.Models.Task;
+using ListSmarter.Buckets.Dtos;
+using ListSmarter.Buckets.Repository.Models;
+using ListSmarter.People.Dtos;
+using ListSmarter.People.Repository.Models;
+using ListSmarter.Tasks.Dtos;
+using Task = ListSmarter.Tasks.Repository.Models.Task;
 
 namespace ListSmarter
 {

@@ -1,6 +1,6 @@
 using FluentValidation;
-using ListSmarter.DTOs;
-using ListSmarter.Services;
+using ListSmarter.Tasks.Business;
+using ListSmarter.Tasks.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace listSmarter.RESTApi.Controllers;

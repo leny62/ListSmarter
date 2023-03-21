@@ -1,17 +1,23 @@
 using FluentValidation;
 using ListSmarter.Common;
-using ListSmarter.Repositories;
-using ListSmarter.Repositories.Models;
-using ListSmarter.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ListSmarter.DTOs;
-using ListSmarter.DTOs.Validators;
-using ListSmarter.Services.Interfaces;
+using ListSmarter.Buckets.Business;
+using ListSmarter.Buckets.Dtos;
+using ListSmarter.Buckets.Repository;
+using ListSmarter.Buckets.Validators;
+using ListSmarter.People.Business;
+using ListSmarter.People.Dtos;
+using ListSmarter.People.Repository;
+using ListSmarter.People.Validators;
+using ListSmarter.Tasks.Business;
+using ListSmarter.Tasks.Dtos;
+using ListSmarter.Tasks.Repository;
+using ListSmarter.Tasks.Validators;
 
 
 namespace ListSmarter;

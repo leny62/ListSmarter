@@ -1,4 +1,4 @@
-using ListSmarter.Repositories.Models;
+using ListSmarter.People.Repository.Models;
 
 namespace ListSmarter.Common;
 

@@ -1,4 +1,4 @@
-using ListSmarter.Repositories.Models;
+using ListSmarter.Buckets.Repository.Models;
 using Task = System.Threading.Tasks.Task;
 
 namespace ListSmarter.Common;

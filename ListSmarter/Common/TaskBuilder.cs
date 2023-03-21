@@ -1,6 +1,5 @@
-using ListSmarter.Repositories.Models;
-using ListSmarter.Repositories.Models.Enums;
-using Task = ListSmarter.Repositories.Models.Task;
+using ListSmarter.Tasks.Repository.Models;
+using Task = ListSmarter.Tasks.Repository.Models.Task;
 
 namespace ListSmarter.Common;
 

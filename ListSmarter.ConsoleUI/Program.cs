@@ -1,11 +1,18 @@
-﻿using ListSmarter.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using ListSmarter.Repositories;
-using ListSmarter.DTOs;
-using ListSmarter.DTOs.Validators;
+using ListSmarter.Buckets.Business;
+using ListSmarter.Buckets.Dtos;
+using ListSmarter.Buckets.Repository;
+using ListSmarter.Buckets.Validators;
+using ListSmarter.People.Business;
+using ListSmarter.People.Dtos;
+using ListSmarter.People.Repository;
+using ListSmarter.People.Validators;
 using listSmarter.RESTApi.Controllers;
-using ListSmarter.Services.Interfaces;
+using ListSmarter.Tasks.Business;
+using ListSmarter.Tasks.Dtos;
+using ListSmarter.Tasks.Repository;
+using ListSmarter.Tasks.Validators;
 
 namespace ListSmarter.ConsoleUI
 {

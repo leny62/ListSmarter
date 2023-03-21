@@ -1,7 +1,6 @@
 using FluentValidation;
-using ListSmarter.DTOs;
-using ListSmarter.Repositories.Models;
-using ListSmarter.Services;
+using ListSmarter.People.Business;
+using ListSmarter.People.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Task = System.Threading.Tasks.Task;
 
