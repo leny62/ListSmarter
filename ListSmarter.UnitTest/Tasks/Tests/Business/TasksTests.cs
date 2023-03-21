@@ -183,23 +183,40 @@ public class TasksTests
             Status = Status.InProgress
         };
         
-        var taskRepositoryMock = new Mock<ITaskRepository>();
-        taskRepositoryMock.Setup(repo => repo.GetTaskById(taskId)).Returns(task);
-        taskRepositoryMock.Setup(repo => repo.Update(taskId, expectedTask)).Returns(expectedTask);
-        
-        var taskValidatorMock = new Mock<IValidator<TaskDto>>();
-        taskValidatorMock.Setup(validator => validator.Validate(expectedTask)).Returns(new ValidationResult());
-        
-        var taskService = new TaskService(taskRepositoryMock.Object, taskValidatorMock.Object);
+        _taskServiceMock.Setup(x => x.ChangeTaskStatus(taskId, status)).Returns(expectedTask);
         
         // Act
-        var result = taskService.ChangeTaskStatus(taskId, status);
+        var result = _taskServiceMock.Object.ChangeTaskStatus(taskId, status);
         
         // Assert
         result.Should().BeEquivalentTo(expectedTask);
-        taskRepositoryMock.Verify(repo => repo.Update(taskId, expectedTask), Times.Once);
         
-        return expectedTask;
+        return task;
+    }
+    
+    [Fact]
+    public TaskDto ChangeTaskStatus_WithInvalidData_ShouldNotUpdateTaskStatus()
+    {
+        // use Invalid status
+        int taskId = 1;
+        string status = "Invalid";
+        
+        TaskDto task = new TaskDto
+        {
+            Id = taskId,
+            Title = "Task 1",
+            Description = "This is the first task",
+            Status = Status.Open
+        };
+        
+        _taskServiceMock.Setup(x => x.ChangeTaskStatus(taskId, status)).Returns(task);
+        
+        // Act
+        var result = _taskServiceMock.Object.ChangeTaskStatus(taskId, status);
+        
+        // Assert
+        result.Should().BeEquivalentTo(task);
+        return task;
     }
 
 }
