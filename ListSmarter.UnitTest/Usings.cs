@@ -1,1 +1,12 @@
-global using NUnit.Framework;
+global using System.Collections.Generic;
+global using FluentAssertions;
+global using FluentValidation;
+global using ListSmarter.Buckets.Business;
+global using ListSmarter.Buckets.Dtos;
+global using Moq;
+global using Xunit;
+global using ListSmarter.People.Business;
+global using ListSmarter.People.Dtos;
+global using ListSmarter.Tasks.Business;
+global using ListSmarter.Tasks.Dtos;
+global using ListSmarter.Tasks.Repository.Models;

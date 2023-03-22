@@ -1,12 +1,4 @@
-using System.Collections.Generic;
-using FluentAssertions;
-using FluentValidation;
-using ListSmarter.People.Business;
-using ListSmarter.People.Dtos;
-using Moq;
-using Xunit;
-
-namespace ListSmarter.UnitTest.People.Tests.Business;
+namespace ListSmarter.UnitTest.People.Business;
 
 public class PeopleTests
 {

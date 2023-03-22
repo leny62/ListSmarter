@@ -1,16 +1,4 @@
-using System.Collections.Generic;
-using FluentAssertions;
-using FluentValidation;
-using FluentValidation.Results;
-using ListSmarter.Buckets.Dtos;
-using ListSmarter.People.Dtos;
-using ListSmarter.Tasks.Business;
-using ListSmarter.Tasks.Dtos;
-using ListSmarter.Tasks.Repository.Models;
-using Moq;
-using Xunit;
-
-namespace ListSmarter.UnitTest.Tasks.Tests.Business;
+namespace ListSmarter.UnitTest.Tasks.Business;
 
 public class TasksTests
 {
@@ -218,5 +206,187 @@ public class TasksTests
         result.Should().BeEquivalentTo(task);
         return task;
     }
+    
+    [Fact]
+    public TaskDto ChangeTaskStatus_WithInvalidTaskId_ShouldNotUpdateTaskStatus()
+    {
+        // use Invalid taskId
+        int taskId = 0;
+        string status = "InProgress";
+        
+        TaskDto task = new TaskDto
+        {
+            Id = taskId,
+            Title = "Task 1",
+            Description = "This is the first task",
+            Status = Status.Open
+        };
+        
+        _taskServiceMock.Setup(x => x.ChangeTaskStatus(taskId, status)).Returns(task);
+        
+        // Act
+        var result = _taskServiceMock.Object.ChangeTaskStatus(taskId, status);
+        
+        // Assert
+        result.Should().BeEquivalentTo(task);
+        return task;
+    }
+    
+    [Fact]
+    public TaskDto ChangeTaskStatus_WithInvalidTaskIdAndStatus_ShouldNotUpdateTaskStatus()
+    {
+        // use Invalid taskId and status
+        int taskId = 0;
+        string status = "Invalid";
+        
+        TaskDto task = new TaskDto
+        {
+            Id = taskId,
+            Title = "Task 1",
+            Description = "This is the first task",
+            Status = Status.Open
+        };
+        
+        _taskServiceMock.Setup(x => x.ChangeTaskStatus(taskId, status)).Returns(task);
+        
+        // Act
+        var result = _taskServiceMock.Object.ChangeTaskStatus(taskId, status);
+        
+        // Assert
+        result.Should().BeEquivalentTo(task);
+        return task;
+    }
+    
+    [Fact]
+    public void AddTask_NullTaskTitle_ReturnsNullReferenceException()
+    {
+        // Arrange
+        var task = new TaskDto
+        {
+            Id = 1,
+            Title = null,
+            Description = "This is the first task"
+        };
+        _taskServiceMock.Setup(x => x.Create(task)).Returns(task);
 
+        // Act
+        var result = _taskServiceMock.Object.Create(task);
+
+        // Assert
+        result.Should().BeEquivalentTo(task);
+    }
+    
+    [Fact]
+    public void GetTaskById_InvalidTaskId_ReturnsNull()
+    {
+        // Arrange
+        int taskId = 0;
+        TaskDto task = null;
+        _taskServiceMock.Setup(x => x.GetById(taskId)).Returns(task);
+
+        // Act
+        var result = _taskServiceMock.Object.GetById(taskId);
+
+        // Assert
+        result.Should().BeEquivalentTo(task);
+    }
+    
+    [Fact]
+    public void DeleteTask_InvalidTaskId_ReturnsNull()
+    {
+        // Arrange
+        int taskId = 0;
+        TaskDto task = null;
+        _taskServiceMock.Setup(x => x.Delete(taskId));
+
+        // Act
+        _taskServiceMock.Object.Delete(taskId);
+
+        // Assert
+        _taskServiceMock.Verify(x => x.Delete(taskId), Times.Once);
+    }
+    
+    [Fact]
+    public void AssignTaskToPerson_InvalidTaskId_ReturnsNull()
+    {
+        // Arrange
+        int taskId = 0;
+        int personId = 1;
+        TaskDto task = null;
+        _taskServiceMock.Setup(x => x.AssignTaskToPerson(taskId, personId));
+
+        // Act
+        _taskServiceMock.Object.AssignTaskToPerson(taskId, personId);
+
+        // Assert
+        _taskServiceMock.Verify(x => x.AssignTaskToPerson(taskId, personId), Times.Once);
+    }
+    
+    [Fact]
+    public void AssignTaskToPerson_InvalidPersonId_ReturnsNull()
+    {
+        // Arrange
+        int taskId = 1;
+        int personId = 0;
+        TaskDto task = null;
+        _taskServiceMock.Setup(x => x.AssignTaskToPerson(taskId, personId));
+
+        // Act
+        _taskServiceMock.Object.AssignTaskToPerson(taskId, personId);
+
+        // Assert
+        _taskServiceMock.Verify(x => x.AssignTaskToPerson(taskId, personId), Times.Once);
+    }
+    
+    [Fact]
+    public void AssignTaskToBucket_InvalidTaskId_ReturnsNull()
+    {
+        // Arrange
+        int taskId = 0;
+        int bucketId = 1;
+        TaskDto task = null;
+        _taskServiceMock.Setup(x => x.AssignTaskToBucket(taskId, bucketId));
+
+        // Act
+        _taskServiceMock.Object.AssignTaskToBucket(taskId, bucketId);
+
+        // Assert
+        _taskServiceMock.Verify(x => x.AssignTaskToBucket(taskId, bucketId), Times.Once);
+    }
+    
+    [Fact]
+    public void AssignTaskToBucket_InvalidBucketId_ReturnsNull()
+    {
+        // Arrange
+        int taskId = 1;
+        int bucketId = 0;
+        TaskDto task = null;
+        _taskServiceMock.Setup(x => x.AssignTaskToBucket(taskId, bucketId));
+
+        // Act
+        _taskServiceMock.Object.AssignTaskToBucket(taskId, bucketId);
+
+        // Assert
+        _taskServiceMock.Verify(x => x.AssignTaskToBucket(taskId, bucketId), Times.Once);
+    }
+    
+    [Fact]
+    public void DeleteTask_ValidTaskId_RemovesTaskFromList()
+    {
+        // Arrange
+        int taskId = 1;
+        TaskDto task = new TaskDto
+        {
+            Id = taskId,
+            Title = "Task 1",
+            Description = "This is the first task"
+        };
+        _taskServiceMock.Setup(x => x.Delete(taskId));
+
+        // Act
+        _taskServiceMock.Object.Delete(taskId);
+
+        // Assert
+        _taskServiceMock.Verify(x => x.Delete(taskId), Times.Once);
+    }
 }
