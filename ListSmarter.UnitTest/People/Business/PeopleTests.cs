@@ -1,3 +1,6 @@
+using FluentValidation.Results;
+using Xunit.Sdk;
+
 namespace ListSmarter.UnitTest.People.Business;
 
 public class PeopleTests
@@ -96,7 +99,7 @@ public class PeopleTests
         // Assert
         result.Should().BeEquivalentTo(person);
     }
-    
+
     [Fact]
     public void Delete_ShouldDeletePerson()
     {
@@ -108,11 +111,60 @@ public class PeopleTests
             LastName = "Doe"
         };
         _personServiceMock.Setup(x => x.Delete(1)).Returns(person);
-        
+
         // Act
         var result = _personServiceMock.Object.Delete(1);
-        
+
         // Assert
         result.Should().BeEquivalentTo(person);
     }
+    
+    [Fact]
+    public void Create_WithInvalidData_ShouldNotCreatePerson()
+    {
+        // Arrange
+        var person = new PersonDto
+        {
+            Id = 1,
+            FirstName = "John",
+            LastName = "Doe"
+        };
+        var validationResult = new ValidationResult(new List<ValidationFailure>
+        {
+            new ValidationFailure("FirstName", "First name is required"),
+            new ValidationFailure("LastName", "Last name is required")
+        });
+        _personValidatorMock.Setup(x => x.Validate(person)).Returns(validationResult);
+        
+        // Act
+        var result = _personServiceMock.Object.Create(person);
+        
+        // Assert
+        result.Should().BeNull();
+    }
+    
+    [Fact]
+    public void Update_WithInvalidData_ShouldNotUpdatePerson()
+    {
+        // Arrange
+        var person = new PersonDto
+        {
+            Id = 1,
+            FirstName = "John",
+            LastName = "Doe"
+        };
+        var validationResult = new ValidationResult(new List<ValidationFailure>
+        {
+            new ValidationFailure("FirstName", "First name is required"),
+            new ValidationFailure("LastName", "Last name is required")
+        });
+        _personValidatorMock.Setup(x => x.Validate(person)).Returns(validationResult);
+        
+        // Act
+        var result = _personServiceMock.Object.Update(1, person);
+        
+        // Assert
+        result.Should().BeNull();
+    }
+    
 }
